@@ -4,7 +4,7 @@ With Twilio Studio and TaskRouter, in less than two hours, you can set up a call
 
 #### Call Work Flow
 
-<img src="flowDiagram.jpg" width="600"/>
+<img src="docFlowDiagram.jpg" width="600"/>
 
 This exercise will walk you through the steps to configure your Twilio phone number to receive calls and put the callers into a queue.
 The callers will listen to music while TaskRouter arranges an agent to take their call.
@@ -78,7 +78,7 @@ Drag an "Enqueue Call" widget onto the flow panel. This widget will put callers 
 - Set, TaskRouter Workspace, to: writers.
 - Set, TaskRouter Workflow, to: support.
 
-<img src="StudioIvr.jpg" width="200"/>
+<img src="docStudioIvr.jpg" width="200"/>
 
 Click Save. Click Publish. The Studio is complete and ready to use.
 
@@ -258,13 +258,13 @@ In your browser, go to your TaskRouter Workers Application.
 - Click Go offline, and Go online, which is how you set your availability status.
 - Click Go online,to be available for a call reservation.
 
-<img src="TR_WorkerOnline.jpg" width="300"/>
+<img src="docTR_WorkerOnline.jpg" width="300"/>
 
 ### Test the Call Work Flow System
 
 Call your IVR Twilio phone number, and you will be put into the TaskRouter queue.
 - In your TaskRouter Workers Application, Accept and Reject options are highlighted.
-<img src="TR_WorkerAr.jpg" width="300"/>
+<img src="docTR_WorkerAr.jpg" width="300"/>
 
 - Click Accept. When you accept a call, TaskRouter will dial your TaskRouter worker phone number("contact_uri").
 - Your phone will ring, and, End conference will be highlighted because the call is a conference call.
@@ -302,7 +302,7 @@ and end their reservation conference calls.
 
 Worker application screen print:
 
-<img src="TR_Worker.jpg" width="300"/>
+<img src="docTR_Worker.jpg" width="300"/>
 
 --------------------------------------------------------------------------------
 
