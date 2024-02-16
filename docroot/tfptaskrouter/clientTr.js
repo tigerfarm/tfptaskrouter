@@ -11,6 +11,8 @@ var trTokenValid = false;
 var ActivitySid_Available = "";
 var ActivitySid_Offline = "";
 var ActivitySid_Unavailable = "";
+
+var theConference = "";
 // 
 // -----------------------------------------------------------------
 // let worker = new Twilio.TaskRouter.Worker("<?= $workerToken ?>");
@@ -196,8 +198,8 @@ function acceptReservation() {
     var options = {
         "PostWorkActivitySid": ActivitySid_Offline,
         "Timeout": 5 // Timeout is the time allowed for the phone to ring, once the reservation is accepted.
-        // , "record": "true" // true or false (default)
-        // , "record": "record-from-start" // record-from-start or do-not-record (default)
+                // , "record": "true" // true or false (default)
+                // , "record": "record-from-start" // record-from-start or do-not-record (default)
     };
     logger("Conference call attribute, Record: " + options.Record);
     logger("Conference call attribute, Timeout: " + options.Timeout);
@@ -249,6 +251,31 @@ function setWorkSpace(workerActivity) {
 }
 
 // -----------------------------------------------------------------------------
+// Conference call functions
+
+function setButtonEndConference(value) {
+    $('#btn-endconf').prop('disabled', value);
+}
+function endConference() {
+    if (theConference === "") {
+        $("div.trMessages").html("Conference call not started.");
+        logger("- theConference not set.");
+        return;
+    }
+    $("div.callMessages").html("Please wait, ending conference.");
+    logger("End the conference: " + theConference);
+    // setButtons("endConference()");
+    setButtonEndConference(true);
+    $.get("conferenceCompleted.php?conferenceName=" + theConference, function (theResponse) {
+        logger("Response: " + theResponse);
+        theConference = "";
+    }).fail(function () {
+        logger("- Error ending conference.");
+        return;
+    });
+}
+
+// -----------------------------------------------------------------------------
 // Get a TaskRouter Worker token.
 function trToken() {
     if (trTokenValid) {
@@ -273,9 +300,7 @@ function trToken() {
     // logger("Refresh the TaskRouter token using client id: " + clientId + "&tokenPassword=" + tokenPassword);
     logger("Refresh the TaskRouter token using client id: " + clientId);
     $("div.trMessages").html("Refreshing token, please wait.");
-    // $.get("generateToken?&clientid=" + clientId + "tokenPassword=" + tokenPassword, function (theToken) {
-    $.get("generateToken.php?clientid=" + clientId + "&tokenPassword=" + tokenPassword, function (theToken) {
-        logger("theToken");
+    $.get("generateToken?clientid=" + clientId + "&tokenPassword=" + tokenPassword, function (theToken) {
         if (theToken.startsWith('0')) {
             $("div.trMessages").html("Invalid password.");
             return;
@@ -285,7 +310,7 @@ function trToken() {
             return;
         }
         $("div.trMessages").html("TaskRouter token received.");
-        logger("TaskRouter token refreshed :" + theToken.trim() + ":");
+        logger("TaskRouter token refreshed, stringlength :" + theToken.length + ":");
         worker = new Twilio.TaskRouter.Worker(theToken);
         registerTaskRouterCallbacks();
         $("div.msgClientid").html("TaskRouter Token id: " + clientId);

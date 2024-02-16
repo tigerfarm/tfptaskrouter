@@ -2,21 +2,21 @@
 // https://www.twilio.com/docs/taskrouter/js-sdk-v1/workspace
 //
 console.log("+++ Start...");
-const ACCOUNT_SID = process.env.TR_ACCOUNT_SID;
-const ACCOUNT_AUTH_TOKEN = process.env.TR_AUTH_TOKEN;
-const WORKSPACE_SID = process.env.WORKSPACE_SID;
+// const ACCOUNT_SID = process.env.TR_ACCOUNT_SID;
+// const ACCOUNT_AUTH_TOKEN = process.env.TR_AUTH_TOKEN;
+// const WORKSPACE_SID = process.env.WORKSPACE_SID;
 
 // -------------------------------------------------------
 const taskrouter = require('twilio').jwt.taskrouter;
 const util = taskrouter.util;
 
 // To set up environmental variables, see http://twil.io/secure
-const accountSid = process.env.TR_ACCOUNT_SID;
-const authToken = process.env.TR_AUTH_TOKEN;
-const workspaceSid = process.env.WORKSPACE_SID;
-console.log("+ accountSid   :" + accountSid + ":");
-console.log("+ authToken    :" + authToken + ":");
-console.log("+ workspaceSid :" + workspaceSid + ":");
+const ACCOUNT_SID = process.env.TR_ACCOUNT_SID;
+const ACCOUNT_AUTH_TOKEN = process.env.TR_AUTH_TOKEN;
+const WORKSPACE_SID = process.env.WORKSPACE_SID;
+console.log("+ ACCOUNT_SID   :" + ACCOUNT_SID + ":");
+console.log("+ ACCOUNT_AUTH_TOKEN    :" + ACCOUNT_AUTH_TOKEN + ":");
+console.log("+ WORKSPACE_SID :" + WORKSPACE_SID + ":");
 
 const TASKROUTER_BASE_URL = 'https://taskrouter.twilio.com';
 const version = 'v1';
@@ -30,7 +30,7 @@ function buildWorkspacePolicy(options) {
         TASKROUTER_BASE_URL,
         version,
         'Workspaces',
-        workspaceSid
+        WORKSPACE_SID
     ];
     console.log("+ urlComponents " + urlComponents.concat(resources).join('/') + " " + options.method);
     return new Policy({
@@ -51,20 +51,21 @@ const workspacePolicies = [
 ];
 // Event Bridge Policies
 const eventBridgePolicies = util.defaultEventBridgePolicies(
-        accountSid,
-        workspaceSid
+        ACCOUNT_SID,
+        WORKSPACE_SID
         );
 
 const capability = new taskrouter.TaskRouterCapability({
-    accountSid: accountSid,
-    authToken: authToken,
-    workspaceSid: workspaceSid,
-    channelId: "WKb9302b30213ee6a76c10cf8b4cf94612" // workspaceSid
+    accountSid: ACCOUNT_SID,
+    authToken: ACCOUNT_AUTH_TOKEN,
+    workspaceSid: WORKSPACE_SID,
+    channelId: "WKb9302b30213ee6a76c10cf8b4cf94612" // WORKSPACE_SID
 });
 eventBridgePolicies.concat(workspacePolicies).forEach(policy => {
   capability.addPolicy(policy);
 });
 
 const token = capability.toJwt();
+console.log("+ token: " + token);
 
 // eof

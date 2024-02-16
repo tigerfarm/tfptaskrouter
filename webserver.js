@@ -29,17 +29,21 @@ var app = express();
 // -----------------------------------------------------------------------------
 // TaskRouter
 
+const taskrouter = require('twilio').jwt.taskrouter;
+const util = taskrouter.util;
+
 const ACCOUNT_SID = process.env.TR_ACCOUNT_SID;
 const ACCOUNT_AUTH_TOKEN = process.env.TR_AUTH_TOKEN;
-
 var WORKSPACE_SID = process.env.WORKSPACE_SID;
+console.log("+ ACCOUNT_SID   :" + ACCOUNT_SID + ":");
 console.log("+ WORKSPACE_SID :" + WORKSPACE_SID + ":");
 //
 const trClient = require('twilio')(ACCOUNT_SID, ACCOUNT_AUTH_TOKEN);
+// Test that the TaskRouter API is working:
 trClient.taskrouter.v1.workspaces(WORKSPACE_SID)
         .fetch()
         .then(workspace => {
-            console.log("+ workspace friendlyName: " + workspace.friendlyName);
+            console.log("+ Workspace friendlyName: " + workspace.friendlyName);
         });
 
 // -----------------------------------------------------------------------------
@@ -55,22 +59,69 @@ function sayMessage(message) {
 // -----------------------------------------------------------------------------
 // 
 // -----------------------------------------------------------------------------
-function generateToken(theIdentity) {
+const TASKROUTER_BASE_URL = 'https://taskrouter.twilio.com';
+const version = 'v1';
+function generateToken(theIdentity, tokenPassword) {
     if (theIdentity === "") {
-        console.log("- Required: user identity for creating a Conversations token.");
+        console.log("- Required: user identity for creating a token.");
+        return "";
+    }
+    if (tokenPassword === "") {
+        console.log("- Required: tokenPassword");
         return "";
     }
     // Documentation: https://www.twilio.com/docs/taskrouter/js-sdk-v1/workspace
     sayMessage("+ Generate token, ID: " + theIdentity);
-    const AccessToken = require('twilio').jwt.AccessToken;
 
-    // Output the token.
-    theToken = "abc";
-    // theToken = token.toJwt();
-    // console.log("+ theToken " + theToken);
+    // Helper function to create Policy
+    const Policy = taskrouter.TaskRouterCapability.Policy;
+    function buildWorkspacePolicy(options) {
+        options = options || {};
+        const resources = options.resources || [];
+        const urlComponents = [
+            TASKROUTER_BASE_URL,
+            version,
+            'Workspaces',
+            WORKSPACE_SID
+        ];
+        // console.log("+ urlComponents " + urlComponents.concat(resources).join('/') + " " + options.method);
+        return new Policy({
+            url: urlComponents.concat(resources).join('/'),
+            method: options.method,
+            allow: true
+        });
+    }
+    const workspacePolicies = [
+        // Workspace Policy
+        buildWorkspacePolicy({resources: [], method: 'GET'}),
+        // Workspace subresources fetch Policy
+        buildWorkspacePolicy({resources: ['**'], method: 'GET'}),
+        // Workspace resources update Policy
+        buildWorkspacePolicy({resources: ['**'], method: 'POST'}),
+        // Workspace resources delete Policy
+        buildWorkspacePolicy({resources: ['**'], method: 'DELETE'}),
+    ];
+    const eventBridgePolicies = util.defaultEventBridgePolicies(
+            ACCOUNT_SID,
+            WORKSPACE_SID
+            );
+    const capability = new taskrouter.TaskRouterCapability({
+        accountSid: ACCOUNT_SID,
+        authToken: ACCOUNT_AUTH_TOKEN,
+        workspaceSid: WORKSPACE_SID,
+        channelId: "WKb9302b30213ee6a76c10cf8b4cf94612" // WORKSPACE_SID
+    });
+    eventBridgePolicies.concat(workspacePolicies).forEach(policy => {
+        capability.addPolicy(policy);
+    });
+
+    const theToken = capability.toJwt();
+    console.log("+ theToken: " + theToken);
     return(theToken);
 }
 
+// -----------------------------------------------------------------------------
+// Sample call PHP program
 function generateTokenPHP(res, theIdentity, tokenPassword) {
     if (theIdentity === "") {
         console.log("- Required: user identity for creating a token.");
@@ -94,35 +145,22 @@ function generateTokenPHP(res, theIdentity, tokenPassword) {
         res.send(theResponse);
     });
 }
-// 
+
 // -----------------------------------------------------------------------------
 // Web server interface to call functions.
 // 
 // -----------------------------------------------------------------------------
-app.get('/tfptaskrouter/generateToken.php', function (req, res) {
-    sayMessage("+ Generate Token PHP.");
+app.get('/tfptaskrouter/generateToken', function (req, res) {
+    sayMessage("+ Generate Token.");
     if (req.query.tokenPassword) {
         if (req.query.clientid) {
-            theR = generateTokenPHP(res, req.query.clientid, req.query.tokenPassword);
-            // console.log("+ theR :" + theR + ":");
-            // res.send(theR);
+            res.send(generateToken(req.query.clientid, req.query.tokenPassword));
         } else {
             sayMessage("- Parameter required: clientid.");
             res.sendStatus(502);
         }
     } else {
         sayMessage("- Parameter required: tokenPassword.");
-        res.sendStatus(502);
-    }
-});
-
-// -----------------------------------------------------------------------------
-app.get('/tfptaskrouter/generateToken', function (req, res) {
-    sayMessage("+ Generate Token.");
-    if (req.query.clientid) {
-        res.send(generateToken(req.query.clientid));
-    } else {
-        sayMessage("- Parameter required: clientid.");
         res.sendStatus(502);
     }
 });
@@ -152,6 +190,37 @@ app.get('/tfptaskrouter/getTrActivites', function (req, res) {
                             res.send(theList);
                         });
             });
+});
+
+// -----------------------------------------------------------------------------
+function conferenceCompleted(conferenceName) {
+    if (conferenceName === "") {
+        console.log("- Required: conferenceName.");
+        return "";
+    }
+    console.log("++ conferenceEndFn, conferenceName=" + conferenceName);
+    const exec = require('child_process').exec;
+    const theProgramName = "conferenceCompleted.php";
+    const theProgram = 'php ' + path.join(process.cwd(), theProgramName) + " " + conferenceName;
+    exec(theProgram, (error, stdout, stderr) => {
+        theResponse = `${stdout}`;
+        console.log('+ theResponse: ' + theResponse);
+        // console.log(`${stderr}`);
+        if (error !== null) {
+            console.log(`exec error: ${error}`);
+        }
+        return(theResponse);
+    });
+}
+
+app.get('/tfptaskrouter/conferenceCompleted', function (req, res) {
+    sayMessage("+ conferenceCompleted: end a conference call.");
+    if (req.query.conferenceName) {
+        res.send(conferenceCompleted(req.query.conferenceName));
+    } else {
+        sayMessage("- Parameter required: conferenceName.");
+        res.sendStatus(502);
+    }
 });
 
 // -----------------------------------------------------------------------------

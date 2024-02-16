@@ -4,19 +4,14 @@
 if ($argc === 2) {
     $conferenceName = $argv[1];
 } else {
-    $conferenceName = $_REQUEST['conferenceName'];
-}
-// echo "+ conferenceName = " . $conferenceName . "\xA";
-if ($conferenceName === null) {
     echo "0";
     return;
 }
+echo "+ conferenceName = " . $conferenceName . "\xA";
 
 require __DIR__ . '/twilio-php-master/Twilio/autoload.php';
-
 use Twilio\Rest\Client;
-
-$twilio = new Client(getenv("ACCOUNT_SID"), getenv('AUTH_TOKEN'));
+$twilio = new Client(getenv("TR_ACCOUNT_SID"), getenv('TR_AUTH_TOKEN'));
 
 if (strncmp($conferenceName, "CF", 2) === 0) {
     echo "++ End Conference, SID: " . $conferenceName . "\xA";
@@ -25,11 +20,9 @@ if (strncmp($conferenceName, "CF", 2) === 0) {
     } catch (Exception $ex) {
         echo "+ Conference not found.\xA";
     }
-
     echo "++ Ended.\xA";
     return;
 }
-
 echo "++ End Conference, name: " . $conferenceName . "\xA";
 $conferences = $twilio->conferences->read(
         array(
