@@ -31,7 +31,7 @@ trClient.taskrouter.v1.workspaces(WORKSPACE_SID)
             });
         });
         
-// Check if a task has any reservations.
+// If a task has any reservations, list them.
 function reservationList(taskSid, taskQueue, assignmentStatus, isWrapping, theAttributes) {
     trClient.taskrouter.v1.workspaces(WORKSPACE_SID)
             .tasks(taskSid)
@@ -51,6 +51,7 @@ function reservationList(taskSid, taskQueue, assignmentStatus, isWrapping, theAt
             });
 }
 
+// Print selected task attributes.
 function printAttributes(theAttributes) {
                         console.log("+++ theAttributes"
                             + " from:" + JSON.parse(theAttributes).from

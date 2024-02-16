@@ -59,6 +59,9 @@ function sayMessage(message) {
 // -----------------------------------------------------------------------------
 // 
 // -----------------------------------------------------------------------------
+// Generate a worker's TaskRouter token
+// Documentation: https://www.twilio.com/docs/taskrouter/js-sdk-v1/workspace
+
 const TASKROUTER_BASE_URL = 'https://taskrouter.twilio.com';
 const version = 'v1';
 function generateToken(theIdentity, tokenPassword) {
@@ -70,7 +73,6 @@ function generateToken(theIdentity, tokenPassword) {
         console.log("- Required: tokenPassword");
         return "";
     }
-    // Documentation: https://www.twilio.com/docs/taskrouter/js-sdk-v1/workspace
     sayMessage("+ Generate token, ID: " + theIdentity);
 
     // Helper function to create Policy
