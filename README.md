@@ -17,6 +17,8 @@ The callers will listen to music while TaskRouter arranges an agent to take thei
 
 Click [here](https://www.youtube.com/watch?v=OElX06i40Mg) for a video of me walking through the steps.
 
+Click [here](https://www.twilio.com/docs/taskrouter/api) for a TaskRouter: REST API Reference.
+
 #### Implementation requirements:
 - You will need a [Twilio account](http://twilio.com/console). A free Trial account will work for testing.
 - You will need an [Heroku account](https://heroku.com/) to host your application. A free account version will work for testing.
