@@ -194,11 +194,7 @@ app.get('/tfptaskrouter/getTrActivites', function (req, res) {
 
 // -----------------------------------------------------------------------------
 function conferenceCompleted(conferenceName) {
-    if (conferenceName === "") {
-        console.log("- Required: conferenceName.");
-        return "";
-    }
-    console.log("++ conferenceEndFn, conferenceName=" + conferenceName);
+    console.log("++ conferenceName=" + conferenceName);
     const exec = require('child_process').exec;
     const theProgramName = "conferenceCompleted.php";
     const theProgram = 'php ' + path.join(process.cwd(), theProgramName) + " " + conferenceName;

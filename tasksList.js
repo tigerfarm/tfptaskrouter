@@ -1,33 +1,48 @@
 // Documentation:
-// https://www.twilio.com/docs/taskrouter/api/workspace
-// https://www.twilio.com/docs/taskrouter/api/activity
+// https://www.twilio.com/docs/taskrouter/api/task
+// https://www.twilio.com/docs/taskrouter/api/reservations
 //
-console.log("+++ Start...");
+console.log("+++ List tasks and their reservations(if any).");
 const ACCOUNT_SID = process.env.TR_ACCOUNT_SID;
 const ACCOUNT_AUTH_TOKEN = process.env.TR_AUTH_TOKEN;
 const trClient = require('twilio')(ACCOUNT_SID, ACCOUNT_AUTH_TOKEN);
 const WORKSPACE_SID = process.env.WORKSPACE_SID;
-var arrayActivities = [];
-var theFriendlyName = "";
-// var theList = "";        // Used in webserver.js.
+
 trClient.taskrouter.v1.workspaces(WORKSPACE_SID)
-        .fetch()
-        .then(workspace => {
-            theFriendlyName = workspace.friendlyName;
-            console.log("+ Workspace friendlyName: " + theFriendlyName);
-            // theList = theFriendlyName + ":workspacefriendlyname";
-            trClient.taskrouter.v1
-                    .workspaces(WORKSPACE_SID).activities.list()
-                    .then((activities) => {
-                        console.log("++ Load workspace activies.");
-                        activities.forEach((activity) => {
-                            console.log("+ SID: " + activity.sid + " : " + activity.friendlyName);
-                            arrayActivities.push([activity.sid, activity.friendlyName]);
-                            // theList = theList + ":" + activity.sid + ":" + activity.friendlyName;
-                        });
-                        // Following is the value used in webserver.js.
-                        // console.log(theList);
-                        console.log("+++ Completed...");
-                    });
+        .tasks
+        .list({limit: 20})
+        .then(tasks => {
+            tasks.forEach(t => {
+                assignmentStatus = t.assignmentStatus;
+                isWrapping = "";
+                if (assignmentStatus === "wrapping") {
+                    isWrapping = "-*";
+                } else {
+                    console.log("++ "
+                            + "SID: " + t.sid
+                            + " assignmentStatus: " + t.assignmentStatus
+                            );
+                }
+                reservationList(t.sid, t.assignmentStatus, isWrapping);
+            });
         });
+        
+// Check if a task has any reservations.
+function reservationList(taskSid, assignmentStatus, isWrapping) {
+    trClient.taskrouter.v1.workspaces(WORKSPACE_SID)
+            .tasks(taskSid)
+            .reservations
+            .list({limit: 20})
+            .then(reservation => {
+                reservation.forEach(r => {
+                    console.log("++"
+                            + " SID: " + taskSid
+                            + " assignmentStatus: " + assignmentStatus + isWrapping
+                            + " Reservation sid:" + r.sid
+                            + " workerName:" + r.workerName
+                            );
+                });
+            });
+}
+
 // eof
