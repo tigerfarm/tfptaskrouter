@@ -34,7 +34,7 @@ const util = taskrouter.util;
 
 const ACCOUNT_SID = process.env.TR_ACCOUNT_SID;
 const ACCOUNT_AUTH_TOKEN = process.env.TR_AUTH_TOKEN;
-var WORKSPACE_SID = process.env.WORKSPACE_SID;
+const WORKSPACE_SID = process.env.WORKSPACE_SID;
 console.log("+ ACCOUNT_SID   :" + ACCOUNT_SID + ":");
 console.log("+ WORKSPACE_SID :" + WORKSPACE_SID + ":");
 //
@@ -75,77 +75,48 @@ function generateToken(theIdentity, tokenPassword) {
     }
     sayMessage("+ Generate token, ID: " + theIdentity);
 
+    // Need to get the WORKER_SID from theIdentity. 
+    var WORKER_SID = 'WKb9302b30213ee6a76c10cf8b4cf94612';
+
     // Helper function to create Policy
-    const Policy = taskrouter.TaskRouterCapability.Policy;
     function buildWorkspacePolicy(options) {
         options = options || {};
-        const resources = options.resources || [];
-        const urlComponents = [
-            TASKROUTER_BASE_URL,
-            version,
-            'Workspaces',
-            WORKSPACE_SID
-        ];
-        // console.log("+ urlComponents " + urlComponents.concat(resources).join('/') + " " + options.method);
-        return new Policy({
+        var resources = options.resources || [];
+        var urlComponents = [TASKROUTER_BASE_URL, version, 'Workspaces', WORKSPACE_SID]
+        return new taskrouter.TaskRouterCapability.Policy({
             url: urlComponents.concat(resources).join('/'),
-            method: options.method,
+            method: options.method || 'GET',
             allow: true
         });
     }
+    // Event Bridge Policies
+    // Worker Policies
     const workspacePolicies = [
-        // Workspace Policy
-        buildWorkspacePolicy({resources: [], method: 'GET'}),
+        // Workspace fetch Policy
+        buildWorkspacePolicy(),
         // Workspace subresources fetch Policy
-        buildWorkspacePolicy({resources: ['**'], method: 'GET'}),
-        // Workspace resources update Policy
-        buildWorkspacePolicy({resources: ['**'], method: 'POST'}),
-        // Workspace resources delete Policy
-        buildWorkspacePolicy({resources: ['**'], method: 'DELETE'}),
+        buildWorkspacePolicy({resources: ['**']}),
+        // Workspace Activities Update Policy
+        buildWorkspacePolicy({resources: ['Activities'], method: 'POST'}),
+        // Workspace Activities Worker Reserations Policy
+        buildWorkspacePolicy({resources: ['Workers', WORKER_SID, 'Reservations', '**'], method: 'POST'}),
     ];
-    const eventBridgePolicies = util.defaultEventBridgePolicies(
-            ACCOUNT_SID,
-            WORKSPACE_SID
-            );
+
     const capability = new taskrouter.TaskRouterCapability({
         accountSid: ACCOUNT_SID,
         authToken: ACCOUNT_AUTH_TOKEN,
         workspaceSid: WORKSPACE_SID,
-        channelId: "WKb9302b30213ee6a76c10cf8b4cf94612" // WORKSPACE_SID
-    });
-    eventBridgePolicies.concat(workspacePolicies).forEach(policy => {
+        channelId: WORKER_SID}
+    );
+    const eventBridgePolicies = util.defaultEventBridgePolicies(ACCOUNT_SID, WORKER_SID);
+    const workerPolicies = util.defaultWorkerPolicies(version, WORKSPACE_SID, WORKER_SID);
+    eventBridgePolicies.concat(workerPolicies).concat(workspacePolicies).forEach(function (policy) {
         capability.addPolicy(policy);
     });
 
     const theToken = capability.toJwt();
     console.log("+ theToken: " + theToken);
     return(theToken);
-}
-
-// -----------------------------------------------------------------------------
-// Sample call PHP program
-function generateTokenPHP(res, theIdentity, tokenPassword) {
-    if (theIdentity === "") {
-        console.log("- Required: user identity for creating a token.");
-        return "";
-    }
-    if (tokenPassword === "") {
-        console.log("- Required: tokenPassword");
-        return "";
-    }
-    console.log("++ Get Client token, ID: " + theIdentity);
-    const exec = require('child_process').exec;
-    const theProgramName = "generateTrToken.php";
-    const theProgram = 'php ' + path.join(process.cwd(), theProgramName) + " " + theIdentity + " " + tokenPassword;
-    exec(theProgram, (error, stdout, stderr) => {
-        theResponse = `${stdout}`;
-        console.log('+ theResponse: ' + theResponse);
-        // console.log(`${stderr}`);
-        if (error !== null) {
-            console.log(`exec error: ${error}`);
-        }
-        res.send(theResponse);
-    });
 }
 
 // -----------------------------------------------------------------------------
@@ -197,18 +168,8 @@ app.get('/tfptaskrouter/getTrActivites', function (req, res) {
 // -----------------------------------------------------------------------------
 function conferenceCompleted(conferenceName) {
     console.log("++ conferenceName=" + conferenceName);
-    const exec = require('child_process').exec;
-    const theProgramName = "conferenceCompleted.php";
-    const theProgram = 'php ' + path.join(process.cwd(), theProgramName) + " " + conferenceName;
-    exec(theProgram, (error, stdout, stderr) => {
-        theResponse = `${stdout}`;
-        console.log('+ theResponse: ' + theResponse);
-        // console.log(`${stderr}`);
-        if (error !== null) {
-            console.log(`exec error: ${error}`);
-        }
-        return(theResponse);
-    });
+    theResponse = "NA";
+    return(theResponse);
 }
 
 app.get('/tfptaskrouter/conferenceCompleted', function (req, res) {
