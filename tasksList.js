@@ -21,14 +21,18 @@ trClient.taskrouter.v1.workspaces(WORKSPACE_SID)
                     console.log("++ "
                             + "SID: " + t.sid
                             + " assignmentStatus: " + t.assignmentStatus
+                            + " taskQueueFriendlyName:" + t.taskQueueFriendlyName
+                            // + " attributes:" + t.attributes
                             );
+                    printAttributes(t.attributes);
                 }
-                reservationList(t.sid, t.assignmentStatus, isWrapping, t.attributes);
+                // console.log("++ attributes:" + t.attributes);
+                reservationList(t.sid, t.taskQueueFriendlyName, t.assignmentStatus, isWrapping, t.attributes);
             });
         });
         
 // Check if a task has any reservations.
-function reservationList(taskSid, assignmentStatus, isWrapping, theAttributes) {
+function reservationList(taskSid, taskQueue, assignmentStatus, isWrapping, theAttributes) {
     trClient.taskrouter.v1.workspaces(WORKSPACE_SID)
             .tasks(taskSid)
             .reservations
@@ -38,24 +42,28 @@ function reservationList(taskSid, assignmentStatus, isWrapping, theAttributes) {
                     console.log("++"
                             + " SID: " + taskSid
                             + " assignmentStatus: " + assignmentStatus + isWrapping
+                            + " Task Queue:" + taskQueue
                             + " Reservation sid:" + r.sid
                             + " workerName:" + r.workerName
                             );
-                    console.log("+++ theAttributes"
+                    printAttributes(theAttributes);
+                });
+            });
+}
+
+function printAttributes(theAttributes) {
+                        console.log("+++ theAttributes"
                             + " from:" + JSON.parse(theAttributes).from
                             + " conference.sid:" + JSON.parse(theAttributes).conference.sid
                             + " worker:" + JSON.parse(theAttributes).conference.participants.worker
                             + " customer:" + JSON.parse(theAttributes).conference.participants.customer
                             );
-                });
-            });
 }
-
 // Sample task JSON attributes:
-// {"from_country":"US","called":"+16505552222","to_country":"US","to_city":"SAN BRUNO",
+// {"from_country":"US","called":"+16505552222",
 // "from":"+16508661111","direction":"inbound",
 // "to":"+16505552222",
-// "selected_product":"support",
+// "to_country":"US","to_city":"SAN BRUNO",
 // "to_state":"CA","caller_country":"US","call_sid":"CA0e4f74c48a5551810b2f0ac8fb509c14","account_sid":"ACxxxxxxxxx","from_zip":"94030",
 // "called_zip":"94030","caller_state":"CA","to_zip":"94030","called_country":"US","from_city":"SAN BRUNO","called_city":"SAN BRUNO","caller_zip":"94030","api_version":"2010-04-01","called_state":"CA","from_state":"CA","caller":"+16508661111","caller_city":"SAN BRUNO",
 // "conference":{"sid":"CF7a96054293a6280bd244e9f4fa259e96",
