@@ -100,14 +100,18 @@ function generateToken(theIdentity, tokenPassword) {
         buildWorkspacePolicy({resources: ['Activities'], method: 'POST'}),
         // Workspace Activities Worker Reserations Policy
         buildWorkspacePolicy({resources: ['Workers', WORKER_SID, 'Reservations', '**'], method: 'POST'}),
+        //
+        // Should restrict the following,
+        // however it allows the worker set themselves online and offline.
+        buildWorkspacePolicy({resources: ['**'], method: 'POST'}),
     ];
 
     const capability = new taskrouter.TaskRouterCapability({
         accountSid: ACCOUNT_SID,
         authToken: ACCOUNT_AUTH_TOKEN,
         workspaceSid: WORKSPACE_SID,
-        channelId: WORKER_SID}
-    );
+        channelId: WORKER_SID
+    });
     const eventBridgePolicies = util.defaultEventBridgePolicies(ACCOUNT_SID, WORKER_SID);
     const workerPolicies = util.defaultWorkerPolicies(version, WORKSPACE_SID, WORKER_SID);
     eventBridgePolicies.concat(workerPolicies).concat(workspacePolicies).forEach(function (policy) {

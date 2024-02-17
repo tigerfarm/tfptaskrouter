@@ -1,5 +1,5 @@
 // Documentation:
-// https://www.twilio.com/docs/taskrouter/js-sdk-v1/workspace
+// https://www.twilio.com/docs/taskrouter/js-sdk-v1/workspace/worker
 //
 console.log("+++ Start...");
 // -------------------------------------------------------
@@ -24,7 +24,7 @@ const version = 'v1';
 function buildWorkspacePolicy(options) {
     options = options || {};
     var resources = options.resources || [];
-    var urlComponents = [TASKROUTER_BASE_URL, version, 'Workspaces', WORKSPACE_SID]
+    var urlComponents = [TASKROUTER_BASE_URL, version, 'Workspaces', WORKSPACE_SID];
     return new taskrouter.TaskRouterCapability.Policy({
         url: urlComponents.concat(resources).join('/'),
         method: options.method || 'GET',
@@ -42,14 +42,18 @@ const workspacePolicies = [
     buildWorkspacePolicy({resources: ['Activities'], method: 'POST'}),
     // Workspace Activities Worker Reserations Policy
     buildWorkspacePolicy({resources: ['Workers', WORKER_SID, 'Reservations', '**'], method: 'POST'}),
+    // Test adding more
+    buildWorkspacePolicy({resources: ['**'], method: 'POST'}),
+    // buildWorkspacePolicy({resources: ['Tasks', '**'], method: 'POST'}),
+    // buildWorkspacePolicy({resources: ['Workers', '**'], method: 'POST'}),
 ];
 
 const capability = new taskrouter.TaskRouterCapability({
     accountSid: ACCOUNT_SID,
     authToken: ACCOUNT_AUTH_TOKEN,
     workspaceSid: WORKSPACE_SID,
-    channelId: WORKER_SID}
-);
+    channelId: WORKER_SID
+});
 const eventBridgePolicies = util.defaultEventBridgePolicies(ACCOUNT_SID, WORKER_SID);
 const workerPolicies = util.defaultWorkerPolicies(version, WORKSPACE_SID, WORKER_SID);
 eventBridgePolicies.concat(workerPolicies).concat(workspacePolicies).forEach(function (policy) {
