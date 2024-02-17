@@ -16,8 +16,8 @@ client.conferences.each({
             dateString = conferences.dateCreated;
             console.log("+ "
                     // + "+ dateCreated: " + dateString.getMonth()
-                    + " SID: " + conferences.sid 
-                    + " status: " + conferences.status 
-                    + " " + conferences.friendlyName
+                    + " SID: " + conferences.sid
+                    + " status: " + conferences.status
+                    + " friendlyName: " + conferences.friendlyName
                     );
         });

@@ -251,31 +251,6 @@ function setWorkSpace(workerActivity) {
 }
 
 // -----------------------------------------------------------------------------
-// Conference call functions
-
-function setButtonEndConference(value) {
-    $('#btn-endconf').prop('disabled', value);
-}
-function endConference() {
-    if (theConference === "") {
-        $("div.trMessages").html("Conference call not started.");
-        logger("- theConference not set.");
-        return;
-    }
-    $("div.callMessages").html("Please wait, ending conference.");
-    logger("End the conference: " + theConference);
-    // setButtons("endConference()");
-    setButtonEndConference(true);
-    $.get("conferenceCompleted.php?conferenceName=" + theConference, function (theResponse) {
-        logger("Response: " + theResponse);
-        theConference = "";
-    }).fail(function () {
-        logger("- Error ending conference.");
-        return;
-    });
-}
-
-// -----------------------------------------------------------------------------
 // Get a TaskRouter Worker token.
 function trToken() {
     if (trTokenValid) {
@@ -325,6 +300,32 @@ function trToken() {
                 logger("- Error refreshing the TaskRouter token.");
                 return;
             });
+}
+
+// -----------------------------------------------------------------------------
+// Conference call functions
+
+function setButtonEndConference(value) {
+    $('#btn-endconf').prop('disabled', value);
+    setTrButtons("Available");
+}
+function endConference() {
+    if (theConference === "") {
+        $("div.trMessages").html("Conference call not started.");
+        logger("- theConference not set.");
+        return;
+    }
+    $("div.callMessages").html("Please wait, ending conference.");
+    logger("End the conference: " + theConference);
+    // setButtons("endConference()");
+    setButtonEndConference(true);
+    $.get("conferenceCompleted?conferenceSid=" + theConference, function (theResponse) {
+        logger("Response: " + theResponse);
+        theConference = "";
+    }).fail(function () {
+        logger("- Error ending conference.");
+        return;
+    });
 }
 
 // -----------------------------------------------------------------

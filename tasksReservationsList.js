@@ -13,6 +13,7 @@ trClient.taskrouter.v1.workspaces(WORKSPACE_SID)
         .list({limit: 20})
         .then(tasks => {
             tasks.forEach(t => {
+                // Sample assignmentStatus: pending, assigned, canceled, wrapping.
                 assignmentStatus = t.assignmentStatus;
                 isWrapping = "";
                 if (assignmentStatus === "wrapping") {
@@ -24,13 +25,13 @@ trClient.taskrouter.v1.workspaces(WORKSPACE_SID)
                             + ", Queue:" + t.taskQueueFriendlyName
                             // + " attributes:" + t.attributes
                             );
-                    printAttributes(t.attributes);
                 }
                 // console.log("++ attributes:" + t.attributes);
                 reservationsList(t.sid, t.taskQueueFriendlyName, t.assignmentStatus, isWrapping, t.attributes);
+                printAttributes(t.attributes);
             });
         });
-        
+
 // If a task has any reservations, list them.
 function reservationsList(taskSid, taskQueue, assignmentStatus, isWrapping, theAttributes) {
     trClient.taskrouter.v1.workspaces(WORKSPACE_SID)
@@ -44,21 +45,22 @@ function reservationsList(taskSid, taskQueue, assignmentStatus, isWrapping, theA
                             + " assignmentStatus: " + assignmentStatus + isWrapping
                             + " Task Queue:" + taskQueue
                             + " Reservation sid:" + r.sid
+                            + " status:" + r.reservationStatus
                             + " workerName:" + r.workerName
                             );
-                    printAttributes(theAttributes);
+                    // printAttributes(theAttributes);
                 });
             });
 }
 
 // Print selected task attributes.
 function printAttributes(theAttributes) {
-                        console.log("+++ theAttributes"
-                            + " from:" + JSON.parse(theAttributes).from
-                            + " conference.sid:" + JSON.parse(theAttributes).conference.sid
-                            + " worker:" + JSON.parse(theAttributes).conference.participants.worker
-                            + " customer:" + JSON.parse(theAttributes).conference.participants.customer
-                            );
+    console.log("+++ theAttributes"
+            + " from:" + JSON.parse(theAttributes).from
+            + " conference.sid:" + JSON.parse(theAttributes).conference.sid
+            + " worker:" + JSON.parse(theAttributes).conference.participants.worker
+            + " customer:" + JSON.parse(theAttributes).conference.participants.customer
+            );
 }
 // Sample task JSON attributes:
 // {"from_country":"US","called":"+16505552222",

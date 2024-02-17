@@ -42,10 +42,10 @@ const workspacePolicies = [
     buildWorkspacePolicy({resources: ['Activities'], method: 'POST'}),
     // Workspace Activities Worker Reserations Policy
     buildWorkspacePolicy({resources: ['Workers', WORKER_SID, 'Reservations', '**'], method: 'POST'}),
-    // Test adding more
+    //
+    // Should restrict the following,
+    // however it allows the worker set themselves online and offline.
     buildWorkspacePolicy({resources: ['**'], method: 'POST'}),
-    // buildWorkspacePolicy({resources: ['Tasks', '**'], method: 'POST'}),
-    // buildWorkspacePolicy({resources: ['Workers', '**'], method: 'POST'}),
 ];
 
 const capability = new taskrouter.TaskRouterCapability({

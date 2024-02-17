@@ -170,18 +170,22 @@ app.get('/tfptaskrouter/getTrActivites', function (req, res) {
 });
 
 // -----------------------------------------------------------------------------
-function conferenceCompleted(conferenceName) {
-    console.log("++ conferenceName=" + conferenceName);
-    theResponse = "NA";
-    return(theResponse);
+function conferenceCompleted(conferenceSid) {
+    console.log("++ conferenceName=" + conferenceSid);
+    trClient.conferences(conferenceSid)
+            .update({status: 'completed'})
+            .then(conference => {
+                console.log("++ Conference ended, set to completed: " + conference.friendlyName);
+                return("++ Conference ended");
+            });
 }
 
 app.get('/tfptaskrouter/conferenceCompleted', function (req, res) {
-    sayMessage("+ conferenceCompleted: end a conference call.");
-    if (req.query.conferenceName) {
-        res.send(conferenceCompleted(req.query.conferenceName));
+    sayMessage("+ Received a request to end a conference call.");
+    if (req.query.conferenceSid) {
+        res.send(conferenceCompleted(req.query.conferenceSid));
     } else {
-        sayMessage("- Parameter required: conferenceName.");
+        sayMessage("- Parameter required: conferenceSid.");
         res.sendStatus(502);
     }
 });
