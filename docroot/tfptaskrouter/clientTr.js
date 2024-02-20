@@ -275,14 +275,6 @@ function trToken() {
     logger("Refresh the TaskRouter token using client id: " + clientId);
     $("div.trMessages").html("Refreshing token, please wait.");
     $.get("generateToken?clientid=" + clientId + "&tokenPassword=" + tokenPassword, function (theToken) {
-        if (theToken.startsWith('0')) {
-            $("div.trMessages").html("Invalid password.");
-            return;
-        }
-        if (theToken.startsWith('1')) {
-            $("div.trMessages").html("Missing client identity.");
-            return;
-        }
         $("div.trMessages").html("TaskRouter token received.");
         // theToken = "..."; // Can use to hardcode a test token.
         // logger("TaskRouter Worker token refreshed :" + theToken + ":");
@@ -297,6 +289,7 @@ function trToken() {
     })
             .fail(function () {
                 logger("- Error refreshing the TaskRouter token.");
+                $("div.trMessages").html("Identiy and password invalid.");
                 return;
             });
 }

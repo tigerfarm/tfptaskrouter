@@ -219,19 +219,56 @@ Test, by using your mobile phone to call your IVR Twilio phone number.
 - You will be put into the TaskRouter queue and hear the wait music.
 - Disconnect/hangup the call. Your IVR is successfully tested.
 
+### Local Computer Implementation
+
+The application has a NodeJS HTTP Webserver.
+
+Notes, the Twilio Node.JS helper library is not required.
+The server side can run locally on a computer using NodeJS, or run on a website that runs PHP programs.
+
+Download the project zip file.
+
+https://github.com/tigerfarm/tfptaskrouter
+
+1. Click Clone or Download. Click Download ZIP.
+2. Unzip the file into a work directory.
+3. Change into the unzipped directory.
+
+Install the NodeJS requires modules: twilio, request, express, path, and url.
+````
+$ npm install twilio
+$ npm install request
+````
+
+Environement variables:
+- TR_ACCOUNT_SID : your Twilio account SID (starts with "AC", available from Twilio Console)
+- TR_AUTH_TOKEN : your Twilio account auth token (Available from Twilio Console, click view)
+- TR_TOKEN_PASSWORD : your token password (Password is required to create tokens. The password can be any string you want to use.)
+- WORKSPACE_SID : your TaskRouter workspace SID
+
+
+Run the NodeJS HTTP server.
+````
+$ node webserver.js 
++++ TaskRouter application web server is starting up.
++ ACCOUNT_SID   :ACae0e356ccba96d16d8d4f6f9518684a3:
++ WORKSPACE_SID :WS365319d72750ec7fc9bc8e5007c993ec:
++ Listening on port: 8000
++ Workspace friendlyName: writers
+...
+````
+Note, CTRL + C to shutdown the webserver.
+
+Use a browser to access the application:
+
+http://localhost:8000/index.html
+
 #### Test the Application on Your Computer
 
 Agents will use their web browser, on their computer, to manage their status: 
 offline, or available to accept calls.
 
 This application is ready to run from command line.
-
-Add the following key value pairs:
-- ACCOUNT_SID : your Twilio account SID (starts with "AC", available from Twilio Console)
-- AUTH_TOKEN : your Twilio account auth token (Available from Twilio Console, click view)
-- TOKEN_PASSWORD : your token password (Password is required to create tokens. The password can be any string you want to use.)
-- WORKSPACE_SID : your TaskRouter workspace SID
-
 
 From the TaskRouter worker's side, I go to the TaskRouter worker website application
 [link](http://localhost:8000/tfptaskrouter/index.html).
@@ -395,36 +432,6 @@ Worker application screen print:
 
 ## Documentation for Developers
 
-### Local host Implementation using the included NodeJS HTTP Webserver
-
-Notes, the Twilio Node.JS helper library is not required.
-The server side can run locally on a computer using NodeJS, or run on a website that runs PHP programs.
-
-Download the project zip file.
-
-https://github.com/tigerfarm/tigtaskrouterworker
-
-1. Click Clone or Download. Click Download ZIP.
-2. Unzip the file into a work directory.
-3. Change into the unzipped directory.
-
-Install the NodeJS "request" module:
-````
-    $ npm install request
-````
-Run the NodeJS HTTP server.
-````
-    $ node nodeHttpServer.js
-    +++ Start: nodeHttpServer.js
-    Static file server running at
-      => http://localhost:8000/
-    CTRL + C to shutdown
-    ...
-````
-Use a browser to access the application:
-
-http://localhost:8000/index.html
-    
 #### Server side Application Programs
 
 The programs are called from the browser application using Ajax.

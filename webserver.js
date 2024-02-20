@@ -32,6 +32,8 @@ var app = express();
 const taskrouter = require('twilio').jwt.taskrouter;
 const util = taskrouter.util;
 
+const TOKEN_PASSWORD = process.env.TOKEN_PASSWORD;
+
 const ACCOUNT_SID = process.env.TR_ACCOUNT_SID;
 const ACCOUNT_AUTH_TOKEN = process.env.TR_AUTH_TOKEN;
 const WORKSPACE_SID = process.env.WORKSPACE_SID;
@@ -130,10 +132,16 @@ function generateToken(theIdentity, tokenPassword) {
 app.get('/tfptaskrouter/generateToken', function (req, res) {
     sayMessage("+ Generate Token.");
     if (req.query.tokenPassword) {
-        if (req.query.clientid) {
-            res.send(generateToken(req.query.clientid, req.query.tokenPassword));
+        theTokenPassword = req.query.tokenPassword;
+        if (theTokenPassword === TOKEN_PASSWORD) {
+            if (req.query.clientid) {
+                res.send(generateToken(req.query.clientid, theTokenPassword));
+            } else {
+                sayMessage("- Parameter required: clientid.");
+                res.sendStatus(502);
+            }
         } else {
-            sayMessage("- Parameter required: clientid.");
+            sayMessage("- Required, valid: tokenPassword.");
             res.sendStatus(502);
         }
     } else {
