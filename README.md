@@ -251,6 +251,109 @@ Note, if you need to redeploy and keep the same Heroku URL, then remove the old 
 
 #### Test the Application
 
+From the TaskRouter worker's side, I go to the TaskRouter worker website application
+[link](http://localhost:8000/tfptaskrouter/index.html).
+````
+The workspace activity options are listed in the Log messages:
+...
+> + ActivitySid_Offline = WA31703104b45cd069126e71c5de67a869
+> + ActivitySid_Available = WA87258175ab8843ec6d75e54274eb456c
+> + ActivitySid_Unavailable = WAd869170e0a0d27f9846c070b0edcaf79
+
+I enter my identity: dave, and the application password, and click Get access token.
+Logs:
+> Refresh the TaskRouter token using client id: dave
+> TaskRouter Worker token refreshed, stringlength :3088:
+> registerTaskRouterCallbacks().
+> TaskRouter token refreshed.
+> Worker registered: dave.
+> Skills: support
+> Current activity is: Offline
+
+I click Go online.
+
+I check worker status and see that I'm (dave) is Available(online).
+$ node workerStatus.js
++++ Start.
+++ List worker activity status.
++ WK1ab6ad88a07a856306c88ccaab3aa56a : edith : Offline
++ WKb9302b30213ee6a76c10cf8b4cf94612 : dave : Available
+````
+
+From the voice caller's side:
+````
+I make a voice call to my TaskRouter Twilio phone number.
+The call is answered by the Studio flow IVR:
+The Studio IVR messages is said (Say widget) and I'm put on hold in a TaskRouter workflow queue.
+$ node tasksList.js
++++ List tasks and their reservations(if any).
+++ SID: WT785ef314ded948051e735753ced049bc assignmentStatus: pending, Queue:support
+At this time, there are no reservations.
+$ node tasksReservationsList.js
++++ List tasks and their reservations(if any).
+++ SID: WTa3ee1296c9f4bf072a9ed615371d5200 assignmentStatus: pending, Queue:support
+````
+
+Interactions:
+````
+Since the TaskRouter agent, "dave", is offered the option to Accept or Reject the task.
+The workflow has a Task Reservation Timeout of 10 seconds. 
+Dave does not click one of the option with 10 seconds, the reservation times out:
+> reservation.created: You are reserved to handle a call from: +16505551111
+> Reservation SID: WRc3d7d5e3ef968eda3038b67db775f0c5
+> reservation.task.sid: WTa3ee1296c9f4bf072a9ed615371d5200
+> Worker activity updated to: Offline
+> taskSid = WTa3ee1296c9f4bf072a9ed615371d5200
+> Reservation timed out: WRc3d7d5e3ef968eda3038b67db775f0c5
+Dave is set to offline.
+
+Dave goes back online, reservation is set to status: pending.
+$ node tasksReservationsList.js
++++ List tasks and their reservations(if any).
+++ SID: WTa3ee1296c9f4bf072a9ed615371d5200 assignmentStatus: reserved, Queue:support
+++ SID: WTa3ee1296c9f4bf072a9ed615371d5200 assignmentStatus: reserved Task Queue:support Reservation sid:WRc3d7d5e3ef968eda3038b67db775f0c5 status:timeout workerName:dave
+++ SID: WTa3ee1296c9f4bf072a9ed615371d5200 assignmentStatus: reserved Task Queue:support Reservation sid:WR1f2471e9da9af75b45cb6d67e353f029 status:pending workerName:dave
+
+Dave goes back online and clicks Accept,
++ reservation is set to status: accepted.
+$ node tasksReservationsList.js
++++ List tasks and their reservations(if any).
+++ SID: WTa3ee1296c9f4bf072a9ed615371d5200 assignmentStatus: assigned, Queue:support
+...
+++ SID: WTa3ee1296c9f4bf072a9ed615371d5200 assignmentStatus: assigned Task Queue:support Reservation sid:WRf1b1bf3c9bc5fc6c26d36509f913f791 status:accepted workerName:dave
+
++ Dave is connected to the caller. Log message:
+> Conference SID: CFa000943a3a04bbe352f6dffe8d8921e1
+The conference call has the status: in-progress.
+$ node conferenceList.js
++++ List conference calls.
++  SID: CFa000943a3a04bbe352f6dffe8d8921e1 status: in-progress friendlyName: WTa3ee1296c9f4bf072a9ed615371d5200
+
+The reservation list program lists:
++ The task information and which agent is handling the task.
++ The task attributes list the task's converference call information.
+$ node tasksReservationsList.js 
++++ List tasks and their reservations(if any).
+++ SID: WTa3ee1296c9f4bf072a9ed615371d5200 assignmentStatus: assigned, Queue:support
++++ theAttributes from:+16505551111 conference.sid:CFa000943a3a04bbe352f6dffe8d8921e1 worker:CA40d37044249a5270707eb96bf9f4a1df customer:CA22a129993f8efb9403b90df060b28e1a
+...
+++ SID: WTa3ee1296c9f4bf072a9ed615371d5200 assignmentStatus: assigned Task Queue:support Reservation sid:WRf1b1bf3c9bc5fc6c26d36509f913f791 status:accepted workerName:dave
+
+The worker application log message:
+> Worker activity updated to: Unavailable
+$ node workerStatus.js
++++ Start.
+++ List worker activity status.
++ WKb9302b30213ee6a76c10cf8b4cf94612 : dave : Unavailable
+
+The caller hangs up. The conference is still active, and other statuses are the same.
+In the worker application, dave clicks End conference.
+The conference is ended (set to status completed).
+Worker(dave) activity updated to: Offline.
+````
+
+--------------------------------------------------------------------------------
+
 In your browser, go to your TaskRouter Workers Application.
 - WorkSpace name is displayed: writers.
 - Enter your worker name: charles.
@@ -324,18 +427,18 @@ https://github.com/tigerfarm/tigtaskrouterworker
 3. Change into the unzipped directory.
 
 Install the NodeJS "request" module:
-    
+````
     $ npm install request
-
+````
 Run the NodeJS HTTP server.
-
+````
     $ node nodeHttpServer.js
     +++ Start: nodeHttpServer.js
     Static file server running at
       => http://localhost:8000/
     CTRL + C to shutdown
     ...
-    
+````
 Use a browser to access the application:
 
 http://localhost:8000/index.html

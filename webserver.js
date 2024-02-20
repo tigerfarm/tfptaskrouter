@@ -170,6 +170,46 @@ app.get('/tfptaskrouter/getTrActivites', function (req, res) {
 });
 
 // -----------------------------------------------------------------------------
+function taskSetCompleted(taskSid) {
+    trClient.taskrouter.v1.workspaces(WORKSPACE_SID)
+            .tasks(taskSid)
+            .update({
+                assignmentStatus: 'completed',
+                reason: 'Status was "wrapping", changed to: "completed".'
+            })
+            .then(task => console.log("+++ Task set to status: " + task.assignmentStatus));
+}
+function taskReservationTaskFix(taskSid) {
+    console.log("++ taskSid=" + taskSid);
+    trClient.taskrouter.v1.workspaces(WORKSPACE_SID)
+            .tasks(taskSid)
+            .fetch()
+            .then(task => {
+                assignmentStatus = task.assignmentStatus;
+                console.log("++ "
+                        + "SID: " + task.sid
+                        + " assignmentStatus: " + assignmentStatus
+                        + " taskQueueFriendlyName: " + task.taskQueueFriendlyName
+                        );
+                if (assignmentStatus === "wrapping") {
+                    taskSetCompleted(task.sid);
+                    console.log("++ Task set to completed.");
+                    return("++ Task set to completed.");
+                }
+            });
+}
+
+app.get('/tfptaskrouter/taskReservationTaskFix', function (req, res) {
+    sayMessage("+ Change task status from 'wrapping' to 'completed'.");
+    if (req.query.taskSid) {
+        res.send(taskReservationTaskFix(req.query.taskSid));
+    } else {
+        sayMessage("- Parameter required: taskSid.");
+        res.sendStatus(502);
+    }
+});
+
+// -----------------------------------------------------------------------------
 function conferenceCompleted(conferenceSid) {
     console.log("++ conferenceName=" + conferenceSid);
     trClient.conferences(conferenceSid)

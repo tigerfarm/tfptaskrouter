@@ -44,7 +44,7 @@ function registerTaskRouterCallbacks() {
         setActivityStatus(worker.activityName);
         if (taskSid !== "" && worker.activityName === "Offline") {
             // Insure the agent is not hanging in assignment status of wrapping.
-            $.get("taskReservationTaskFix.php?taskSid=" + taskSid, function (theResponse) {
+            $.get("taskReservationTaskFix?taskSid=" + taskSid, function (theResponse) {
                 logger("Task check: " + theResponse);
             })
                     .fail(function () {
@@ -55,7 +55,6 @@ function registerTaskRouterCallbacks() {
             taskSid = "";
         }
     });
-
     // -----------------------------------------------------------------
     worker.on('reservation.created', function (reservation) {
         // reservation.task.attributes can be passed when the task is created.
@@ -121,7 +120,7 @@ function setActivityStatus(workerActivity) {
 function taskReservationTaskFix() {
     // Insure the agent is not hanging in assignment status of wrapping.
     logger("taskReservationTaskFix() taskSid=" + taskSid);
-    $.get("taskReservationTaskFix.php?taskSid=" + taskSid, function (thisResponse) {
+    $.get("taskReservationTaskFix?taskSid=" + taskSid, function (thisResponse) {
         logger("Task check: " + thisResponse);
     })
             .fail(function () {
@@ -201,7 +200,7 @@ function acceptReservation() {
                 // , "record": "true" // true or false (default)
                 // , "record": "record-from-start" // record-from-start or do-not-record (default)
     };
-    logger("Conference call attribute, Record: " + options.Record);
+    // logger("Conference call attribute, Record: " + options.Record);
     logger("Conference call attribute, Timeout: " + options.Timeout);
     logger("TaskRouter post activity SID: " + options.PostWorkActivitySid);
     //
