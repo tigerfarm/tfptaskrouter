@@ -36,7 +36,10 @@ https://github.com/tigerfarm/tfptaskrouter/blob/master/README.md
 
 ### Configure your TaskRouter Workspace
 
-
+A caller enters a Workflow.
+The Workflow puts the caller into a TaskQueue.
+The Workflow finds a Worker to take the call that is in the TaskQueue.
+A Worker can set their Activities status to Offline, Available(online), and Unavailable.
 
 Go to the TaskRouter dashboard:
 https://www.twilio.com/console/taskrouter/dashboard 
@@ -60,6 +63,8 @@ Create a Worker, and set:
 - Attributes to: {"skills":["support"],"contact_uri":"+16505551111"}. Replace 16505551111, with your mobile phone number. This is the number that TaskRouter will use to call the worker.
 
 View Your TaskRouter Activities: Offline, Available, and Unavailable
+
+--------------------------------------------------------------------------------
 
 ### Create an IVR Studio Flow to Manage Incoming Calls
 
