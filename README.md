@@ -16,6 +16,7 @@ The callers will listen to music while TaskRouter arranges an agent to take thei
 5. [Test](README.md#test-the-call-work-flow-system) the call work flow system.
 
 Click [here](https://www.youtube.com/watch?v=OElX06i40Mg) for a video of me walking through the steps.
+Note, the application in the video is an older PHP app, however it works basically the same.
 
 Click [here](https://www.twilio.com/docs/taskrouter/api) for a TaskRouter: REST API Reference.
 
@@ -219,27 +220,7 @@ Test, by using your mobile phone to call your IVR Twilio phone number.
 - You will be put into the TaskRouter queue and hear the wait music.
 - Disconnect/hangup the call. Your IVR is successfully tested.
 
-### Deploy the TaskRouter Worker Application and set the environment variables
-
-To deploy to Heroku, you will need an [Heroku account](https://heroku.com/) to host your application.
-Once you have an account, stay logged in for the deployment and configuration.
-
-Click the Deploy to Heroku link.
-
-[![Deploy to Heroku](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/tigerfarm/tigtaskrouterworker)
-
-When you deploy to Heroku, you will be prompted for an app name. 
-The name needs to be unique. Example, enter your name+tw (example: davidtw). 
-Click Deploy app. Once the application is deployed, click Manage app. 
-Now, set the Heroku project environment variables by clicking Settings. 
-Click Reveal Config Vars.
-
-Note, if you need to redeploy and keep the same Heroku URL, then remove the old app.
-- From the [Heroku dashboard](https://dashboard.heroku.com), select the app which is to be removed.
-- Click Settings. Go to the bottom and click Delete app.
-- Then, redeploy the app by click the GitHub Deploy to Heroku button. And, re-enter the Config Vars.
-
-#### Test the Application
+#### Test the Application on Your Computer
 
 Agents will use their web browser, on their computer, to manage their status: 
 offline, or available to accept calls.
