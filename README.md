@@ -21,13 +21,12 @@ Click [here](https://www.twilio.com/docs/taskrouter/api) for a TaskRouter: REST 
 
 #### Implementation requirements:
 - You will need a [Twilio account](http://twilio.com/console). A free Trial account will work for testing.
-- You will need an [Heroku account](https://heroku.com/) to host your application. A free account version will work for testing.
-- For testing, you will need at least 2 phone numbers; for example two mobile phone numbers: one to be the caller, the other phone number for the worker (agent).
-- Developer skills are not required, as the sample application is functional, as is.
+- For testing, you will need at least 2 phone numbers; for example two mobile phone numbers: 
+one to be the caller, the other phone number for the worker (agent).
 
 The setup instructions are located at this GitHub repository URL:
 
-https://github.com/tigerfarm/tigtaskrouterworker/blob/master/README.md
+https://github.com/tigerfarm/tfptaskrouter/blob/master/README.md
 
 --------------------------------------------------------------------------------
 
@@ -222,9 +221,6 @@ Test, by using your mobile phone to call your IVR Twilio phone number.
 
 ### Deploy the TaskRouter Worker Application and set the environment variables
 
-Agents will use their web browser, on their computer, to manage their status: offline, or available to accept calls.
-
-This application is ready to run.
 To deploy to Heroku, you will need an [Heroku account](https://heroku.com/) to host your application.
 Once you have an account, stay logged in for the deployment and configuration.
 
@@ -238,18 +234,24 @@ Click Deploy app. Once the application is deployed, click Manage app.
 Now, set the Heroku project environment variables by clicking Settings. 
 Click Reveal Config Vars.
 
-Add the following key value pairs:
-- ACCOUNT_SID : your Twilio account SID (starts with "AC", available from Twilio Console)
-- AUTH_TOKEN : your Twilio account auth token (Available from Twilio Console, click view)
-- TOKEN_PASSWORD : your token password (Password is required to create tokens. The password can be any string you want to use.)
-- WORKSPACE_SID : your TaskRouter workspace SID
-
 Note, if you need to redeploy and keep the same Heroku URL, then remove the old app.
 - From the [Heroku dashboard](https://dashboard.heroku.com), select the app which is to be removed.
 - Click Settings. Go to the bottom and click Delete app.
 - Then, redeploy the app by click the GitHub Deploy to Heroku button. And, re-enter the Config Vars.
 
 #### Test the Application
+
+Agents will use their web browser, on their computer, to manage their status: 
+offline, or available to accept calls.
+
+This application is ready to run from command line.
+
+Add the following key value pairs:
+- ACCOUNT_SID : your Twilio account SID (starts with "AC", available from Twilio Console)
+- AUTH_TOKEN : your Twilio account auth token (Available from Twilio Console, click view)
+- TOKEN_PASSWORD : your token password (Password is required to create tokens. The password can be any string you want to use.)
+- WORKSPACE_SID : your TaskRouter workspace SID
+
 
 From the TaskRouter worker's side, I go to the TaskRouter worker website application
 [link](http://localhost:8000/tfptaskrouter/index.html).
