@@ -99,23 +99,23 @@ Click Save. Click Publish. The Studio is complete and ready to use.
 
 ### Configure your Twilio phone number to use the Studio IVR
 
-In the Twilio Console, buy a phone number, if you don't already have one:
-https://www.twilio.com/console/phone-numbers/search
+In the Twilio Console, [buy a phone number](https://www.twilio.com/console/phone-numbers/search), if you don't already have one:
+
 
 In the phone number’s configuration page,
 - Set Voice & Fax, A Call Comes In, to: Studio Flow / Writers IVR
+- Click Save.
 
 Test, by using your mobile phone to call your IVR Twilio phone number.
 - You will hear your Say welcome message.
 - You will be put into the TaskRouter queue and hear the wait music.
 - Disconnect/hangup the call. Your IVR is successfully tested.
 
+--------------------------------------------------------------------------------
+
 ### Local Computer Implementation
 
-The application has a NodeJS HTTP Webserver.
-
-Notes, the Twilio Node.JS helper library is not required.
-The server side can run locally on a computer using NodeJS, or run on a website that runs PHP programs.
+The application has a NodeJS HTTP webserver.
 
 Download the project zip file.
 
