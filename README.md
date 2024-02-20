@@ -1,6 +1,10 @@
 # Implement a Call Work Flow System
 
-With Twilio Studio and TaskRouter, in less than two hours, you can set up a call flow, which is the bases of a call center. 
+With Twilio Studio and TaskRouter, in less than two hours, you can set up a call flow, 
+which is the bases of a caller-agent application system.
+When a caller is added into the queue, TaskRouter creates a reservation and then asks an agent if they will accept the call.
+The agent has the option to Accept, and be connected with the caller; or to Reject the call.
+If the call is rejected, TaskRouter will ask the next available agent.
 
 #### Call Work Flow
 
@@ -10,21 +14,21 @@ This exercise will walk you through the steps to configure your Twilio phone num
 The callers will listen to music while TaskRouter arranges an agent to take their call.
 
 1. [Configure](README.md#configure-your-taskrouter-workspace) your Twilio TaskRouter Workspace.
-2. [Create](README.md#create-an-ivr-studio-flow-to-manage-incoming-calls) an IVR, using Studio, to welcome the caller and put them into the TaskRouter queue.
+2. [Create](README.md#create-an-ivr-studio-flow-to-manage-incoming-calls) an Studio IVR to welcome the caller and put them into the TaskRouter queue.
 3. [Configure](README.md#configure-your-twilio-phone-number-to-use-the-studio-ivr) your Twilio phone number to use the Studio IVR.
 5. [Test](README.md#test-the-call-work-flow-system) the call work flow system.
 
 Click [here](https://www.youtube.com/watch?v=OElX06i40Mg) for a video of me walking through the steps.
-Note, the application in the video is an older PHP app, however it works basically the same.
+Note, the application in the video is an older PHP app, however it works basically the same as this NodeJS application.
 
-Click [here](https://www.twilio.com/docs/taskrouter/api) for a TaskRouter: REST API Reference.
+Click [here](https://www.twilio.com/docs/taskrouter/api) for the Twilio TaskRouter REST API documentation.
 
 #### Implementation requirements:
 - You will need a [Twilio account](http://twilio.com/console). A free Trial account will work for testing.
 - For testing, you will need at least 2 phone numbers; for example two mobile phone numbers: 
 one to be the caller, the other phone number for the worker (agent).
 
-The setup instructions are located at this GitHub repository URL:
+These are the setup instructions which are located on this GitHub repository:
 
 https://github.com/tigerfarm/tfptaskrouter/blob/master/README.md
 
@@ -32,9 +36,7 @@ https://github.com/tigerfarm/tfptaskrouter/blob/master/README.md
 
 ### Configure your TaskRouter Workspace
 
-When a caller is added into the queue, TaskRouter creates a reservation and then asks an agent if they will accept the call.
-The agent has the option to Accept, and be connected with the caller; or to Reject the call.
-If the call is rejected, TaskRouter will ask the next available agent.
+
 
 Go to the TaskRouter dashboard:
 https://www.twilio.com/console/taskrouter/dashboard 
@@ -45,12 +47,13 @@ Create a Workspace, and set:
 Create a TaskQueue for callers, and set:
 - TaskQueue Name to: support.
 - Max Reserved Workers: 1.
-- Queue expression: skills HAS "support". Workers with the skill to handle support calls ("skills":["support"]) will be ask to take calls in this queue.
+- Queue expression: skills HAS "support".
+- Note, workers that have support call skills("skills":["support"]) will be ask to take calls in this queue.
 
 Create a Workflow, and set:
 - Friendly Name: support.
 - Assignment Callback, Task Reservation Timeout: 10. This gives the worker 10 seconds to accept the reservation before TaskRouter sets them to unavailable, and asks another worker to accept the call reservation.
-- Default queue: support. Note, I had to shrink the screen print to be able to see "support" as an option.
+- Default queue: support.
 
 Create a Worker, and set:
 - Name: charles.
@@ -252,7 +255,7 @@ Run the NodeJS HTTP server.
 ````
 $ node webserver.js 
 +++ TaskRouter application web server is starting up.
-+ ACCOUNT_SID   :ACae0e356ccba96d16d8d4f6f9518684a3:
++ ACCOUNT_SID   :ACakm3g5o8s9i6egrpakogpserkasglqe3:
 + WORKSPACE_SID :WS365319d72750ec7fc9bc8e5007c993ec:
 + Listening on port: 8000
 + Workspace friendlyName: writers
