@@ -58,7 +58,7 @@ Create a Worker, and set:
 
 View Your TaskRouter Activities: Offline, Available, and Unavailable
 
-### Create an IVR Using Studio to Manage Incoming Calls
+### Create an IVR Studio Flow to Manage Incoming Calls
 
 The Studio flow will welcome the call and then put them incoming into the TaskRouter support queue.
 
