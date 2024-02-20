@@ -32,15 +32,16 @@ var app = express();
 const taskrouter = require('twilio').jwt.taskrouter;
 const util = taskrouter.util;
 
-const TOKEN_PASSWORD = process.env.TOKEN_PASSWORD;
+// TaskRouter worker application password to obtain an access token.
+const TR_TOKEN_PASSWORD = process.env.TR_TOKEN_PASSWORD;
 
-const ACCOUNT_SID = process.env.TR_ACCOUNT_SID;
-const ACCOUNT_AUTH_TOKEN = process.env.TR_AUTH_TOKEN;
+const TR_ACCOUNT_SID = process.env.TR_ACCOUNT_SID;
+const TR_AUTH_TOKEN = process.env.TR_AUTH_TOKEN;
 const WORKSPACE_SID = process.env.WORKSPACE_SID;
-console.log("+ ACCOUNT_SID   :" + ACCOUNT_SID + ":");
+console.log("+ TR_ACCOUNT_SID   :" + TR_ACCOUNT_SID + ":");
 console.log("+ WORKSPACE_SID :" + WORKSPACE_SID + ":");
 //
-const trClient = require('twilio')(ACCOUNT_SID, ACCOUNT_AUTH_TOKEN);
+const trClient = require('twilio')(TR_ACCOUNT_SID, TR_AUTH_TOKEN);
 // Test that the TaskRouter API is working:
 trClient.taskrouter.v1.workspaces(WORKSPACE_SID)
         .fetch()
@@ -109,12 +110,12 @@ function generateToken(theIdentity, tokenPassword) {
     ];
 
     const capability = new taskrouter.TaskRouterCapability({
-        accountSid: ACCOUNT_SID,
-        authToken: ACCOUNT_AUTH_TOKEN,
+        accountSid: TR_ACCOUNT_SID,
+        authToken: TR_AUTH_TOKEN,
         workspaceSid: WORKSPACE_SID,
         channelId: WORKER_SID
     });
-    const eventBridgePolicies = util.defaultEventBridgePolicies(ACCOUNT_SID, WORKER_SID);
+    const eventBridgePolicies = util.defaultEventBridgePolicies(TR_ACCOUNT_SID, WORKER_SID);
     const workerPolicies = util.defaultWorkerPolicies(version, WORKSPACE_SID, WORKER_SID);
     eventBridgePolicies.concat(workerPolicies).concat(workspacePolicies).forEach(function (policy) {
         capability.addPolicy(policy);
@@ -133,7 +134,7 @@ app.get('/tfptaskrouter/generateToken', function (req, res) {
     sayMessage("+ Generate Token.");
     if (req.query.tokenPassword) {
         theTokenPassword = req.query.tokenPassword;
-        if (theTokenPassword === TOKEN_PASSWORD) {
+        if (theTokenPassword === TR_TOKEN_PASSWORD) {
             if (req.query.clientid) {
                 res.send(generateToken(req.query.clientid, theTokenPassword));
             } else {
@@ -187,7 +188,7 @@ function taskSetCompleted(taskSid) {
             })
             .then(task => console.log("+++ Task set to status: " + task.assignmentStatus));
 }
-function taskReservationTaskFix(taskSid) {
+function taskSetWrapToCompleted(taskSid) {
     console.log("++ taskSid=" + taskSid);
     trClient.taskrouter.v1.workspaces(WORKSPACE_SID)
             .tasks(taskSid)
@@ -207,10 +208,10 @@ function taskReservationTaskFix(taskSid) {
             });
 }
 
-app.get('/tfptaskrouter/taskReservationTaskFix', function (req, res) {
+app.get('/tfptaskrouter/taskSetWrapToCompleted', function (req, res) {
     sayMessage("+ Change task status from 'wrapping' to 'completed'.");
     if (req.query.taskSid) {
-        res.send(taskReservationTaskFix(req.query.taskSid));
+        res.send(taskSetWrapToCompleted(req.query.taskSid));
     } else {
         sayMessage("- Parameter required: taskSid.");
         res.sendStatus(502);

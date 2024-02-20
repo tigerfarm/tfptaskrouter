@@ -13,7 +13,7 @@ var ActivitySid_Offline = "";
 var ActivitySid_Unavailable = "";
 
 var theConference = "";
-// 
+
 // -----------------------------------------------------------------
 // let worker = new Twilio.TaskRouter.Worker("<?= $workerToken ?>");
 function registerTaskRouterCallbacks() {
@@ -32,7 +32,7 @@ function registerTaskRouterCallbacks() {
         }
         logger("---------");
         setTrButtons(worker.activityName);
-        setActivityStatus(worker.activityName);
+        $("div.trStatus").html(worker.activityName);
         $('#btn-trtoken').prop('disabled', true);
     });
     worker.on('activity.update', function (worker) {
@@ -41,10 +41,10 @@ function registerTaskRouterCallbacks() {
             logger("taskSid = " + taskSid);
         }
         setTrButtons(worker.activityName);
-        setActivityStatus(worker.activityName);
+        $("div.trStatus").html(worker.activityName);
         if (taskSid !== "" && worker.activityName === "Offline") {
             // Insure the agent is not hanging in assignment status of wrapping.
-            $.get("taskReservationTaskFix?taskSid=" + taskSid, function (theResponse) {
+            $.get("taskSetWrapToCompleted?taskSid=" + taskSid, function (theResponse) {
                 logger("Task check: " + theResponse);
             })
                     .fail(function () {
@@ -110,25 +110,6 @@ function registerTaskRouterCallbacks() {
         setTrButtons("canceled");
     });
     // -----------------------------------------------------------------
-}
-
-// -----------------------------------------------------------------
-function setActivityStatus(workerActivity) {
-    $("div.trStatus").html(workerActivity);
-}
-
-function taskReservationTaskFix() {
-    // Insure the agent is not hanging in assignment status of wrapping.
-    logger("taskReservationTaskFix() taskSid=" + taskSid);
-    $.get("taskReservationTaskFix?taskSid=" + taskSid, function (thisResponse) {
-        logger("Task check: " + thisResponse);
-    })
-            .fail(function () {
-                logger("- Error running Task Reservation, possible cause, status: wrapping.");
-                logger("-- The response: " + thisResponse);
-                return;
-            });
-    taskSid = "";
 }
 
 // -----------------------------------------------------------------

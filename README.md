@@ -234,15 +234,16 @@ https://github.com/tigerfarm/tfptaskrouter
 2. Unzip the file into a work directory.
 3. Change into the unzipped directory.
 
-Install the NodeJS requires modules: twilio, request, express, path, and url.
+Install the NodeJS modules.
 ````
 $ npm install twilio
 $ npm install request
 ````
+List of "require" modules used: twilio, request, express, path, and url.
 
 Environement variables:
 - TR_ACCOUNT_SID : your Twilio account SID (starts with "AC", available from Twilio Console)
-- TR_AUTH_TOKEN : your Twilio account auth token (Available from Twilio Console, click view)
+- TR_AUTH_TOKEN : your Twilio account auth token (available from Twilio Console, click view)
 - TR_TOKEN_PASSWORD : your token password (Password is required to create tokens. The password can be any string you want to use.)
 - WORKSPACE_SID : your TaskRouter workspace SID
 
