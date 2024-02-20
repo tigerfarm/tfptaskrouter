@@ -36,10 +36,11 @@ https://github.com/tigerfarm/tfptaskrouter/blob/master/README.md
 
 ### Configure your TaskRouter Workspace
 
-A caller enters a Workflow.
-The Workflow puts the caller into a TaskQueue.
-The Workflow finds a Worker to take the call that is in the TaskQueue.
-A Worker can set their Activities status to Offline, Available(online), and Unavailable.
+A caller entered into a Workspace's Workflow.
+The Workflow puts the caller into a Task Queue.
+The Workflow finds a Worker to take the call that is in the Task Queue.
+A Worker can set their Activities availablity status.
+A Worker has attributes to match them to one or more Task Queues.
 
 Go to the TaskRouter dashboard:
 https://www.twilio.com/console/taskrouter/dashboard 
@@ -62,15 +63,18 @@ Create a Worker, and set:
 - Name: charles.
 - Attributes to: {"skills":["support"],"contact_uri":"+16505551111"}. Replace 16505551111, with your mobile phone number. This is the number that TaskRouter will use to call the worker.
 
-View Your TaskRouter Activities: Offline, Available, and Unavailable
+View Your TaskRouter Activities:
+- Offline, cannot be assigned a task
+- Available(online) to be assign a task
+- Unavailable, cannot be assigned a task
 
 --------------------------------------------------------------------------------
 
 ### Create an IVR Studio Flow to Manage Incoming Calls
 
-The Studio flow will welcome the call and then put them incoming into the TaskRouter support queue.
+The Studio flow will welcome the call and then put them into the TaskRouter support Workflow.
 
-Go to the TaskRouter dashboard:
+Go to the Studio dashboard:
 https://www.twilio.com/console/studio
 
 Create a new flow, and set:
@@ -82,7 +86,9 @@ Drag a "Gather Input On Call" widget onto the flow panel. This widget will welco
 - Set the Text to Say to: "Welcome to Support. I will put you on hold while I find you an agent."
 - Set "Stop gathering after" to 1 digit.
 
-Drag an "Enqueue Call" widget onto the flow panel. This widget will put callers into the TaskRouter support queue.
+Drag an "Enqueue Call" widget onto the flow panel. 
+This widget will put callers into the TaskRouter support Workflow.
+The Workflow will put the caller into the support Task Queue.
 - Join the Gather widget to the Enqueue Call widget.
 - Set, TaskRouter Workspace, to: writers.
 - Set, TaskRouter Workflow, to: support.
