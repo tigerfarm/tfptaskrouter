@@ -11,8 +11,7 @@ The callers will listen to music while TaskRouter arranges an agent to take thei
 
 1. [Configure](README.md#configure-your-taskrouter-workspace) your Twilio TaskRouter Workspace.
 2. [Create](README.md#create-an-ivr-studio-flow-to-manage-incoming-calls) an IVR, using Studio, to welcome the caller and put them into the TaskRouter queue.
-3. [Configure](README.md#configure-your-twilio-phone-number-to-use-the-studio-flow) your Twilio phone number to use the Studio IVR.
-4. [Deploy](README.md#deploy-the-taskrouter-worker-application) the TaskRouter Worker application and set the environment variables.
+3. [Configure](README.md#configure-your-twilio-phone-number-to-use-the-studio-ivr) your Twilio phone number to use the Studio IVR.
 5. [Test](README.md#test-the-call-work-flow-system) the call work flow system.
 
 Click [here](https://www.youtube.com/watch?v=OElX06i40Mg) for a video of me walking through the steps.
@@ -59,7 +58,7 @@ Create a Worker, and set:
 
 View Your TaskRouter Activities: Offline, Available, and Unavailable
 
-### Create an IVR Using Studio
+### Create an IVR Using Studio to Manage Incoming Calls
 
 The Studio flow will welcome the call and then put them incoming into the TaskRouter support queue.
 
@@ -207,7 +206,7 @@ Copy and paste the following JSON, as your New Flow JSON Flow definition text.
 }
 ````
 
-### Configure your Twilio phone number to use the Studio IVR.
+### Configure your Twilio phone number to use the Studio IVR
 
 In the Twilio Console, buy a phone number, if you don't already have one:
 https://www.twilio.com/console/phone-numbers/search
