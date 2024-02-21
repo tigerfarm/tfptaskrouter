@@ -14,17 +14,12 @@ If they click Accept, they are connected with the caller.
 
 ### TaskRouter Worker Application Version 4.0
 
-This application is used by Twilio TaskRouter workers to 
-manage their availability status, accept or reject reservation calls,
-and end their reservation conference calls.
-
 Functionality:
 - Using their browser, the application allows workers to enter their identity and a password.
-- Workers manage their status: available to take a call, busy while on a call, or unavailable.
-- Status is displayed in the browser.
-- Workers can accept or reject a call reservation.
+- Workers manage their status: available(online) or unavailable(offline) to take a call.
+- Workers can accept or reject a task.
 - If a worker's reservation times out, the worker status is changed to unavailable.
-- A worker can end a call which disconnects all participants from the reservation conference call.
+- A worker can end a conference call which disconnects all participants.
 - If a task is set to wrapping, it is automatically reset to completed. This avoids a worker not being able to reset their status.
 
 Worker application screen print:
@@ -35,7 +30,11 @@ Worker application screen print:
 
 <img src="docFlowDiagram.jpg" width="600"/>
 
-This exercise will walk you through the steps to configure your Twilio phone number to receive calls and put the callers into a queue.
+--------------------------------------------------------------------------------
+## Implementing the Call Work Flow System
+
+This exercise will walk you through the steps to 
+configure your Twilio phone number to receive calls and put the callers into a queue.
 The callers will listen to music while TaskRouter arranges an agent to take their call.
 
 1. [Configure](README.md#configure-your-taskrouter-workspace) your Twilio TaskRouter Workspace.
