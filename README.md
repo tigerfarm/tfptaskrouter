@@ -24,8 +24,7 @@ implement and test the TaskRouter Worker website application:
 2. [Create](README.md#create-an-ivr-studio-flow-to-manage-incoming-calls) an Studio IVR to welcome the caller and put them into the TaskRouter queue.
 3. [Configure](README.md#configure-your-twilio-phone-number-to-use-the-studio-ivr) your Twilio phone number to use the Studio IVR.
 4. [Implementation](README.md#local-computer-implementation) on your local computer.
-5. [Work Application](README.md#taskrouter-worker-application-version-40) to manage their availability status.
-6. [Test](README.md#test-the-application) the call work flow application system.
+5. [Test](README.md#test-the-application) the call work flow application system.
 
 Click [here](https://www.youtube.com/watch?v=OElX06i40Mg) for a video of me walking through the steps.
 Note, the application in the video is an older PHP app, however it works basically the same as this NodeJS application.
