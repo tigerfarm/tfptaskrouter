@@ -6,6 +6,27 @@ When a caller is added into the queue, TaskRouter creates a reservation and then
 The agent has the option to Accept, and be connected with the caller; or to Reject the call.
 If the call is rejected, TaskRouter will ask the next available agent.
 
+--------------------------------------------------------------------------------
+
+### TaskRouter Worker Application Version 4.0
+
+This application is used by Twilio TaskRouter workers to 
+manage their availability status, accept or reject reservation calls,
+and end their reservation conference calls.
+
+Functionality:
+- Using their browser, the application allows workers to enter their identity and a password.
+- Workers manage their status: available to take a call, busy while on a call, or unavailable.
+- Status is displayed in the browser.
+- Workers can accept or reject a call reservation.
+- If a worker's reservation times out, the worker status is changed to unavailable.
+- A worker can end a call which disconnects all participants from the reservation conference call.
+- If a task is set to wrapping, it is automatically reset to completed. This avoids a worker not being able to reset their status.
+
+Worker application screen print:
+
+<img src="docTR_Worker.jpg" width="300"/>
+
 #### Call Work Flow
 
 <img src="docFlowDiagram.jpg" width="600"/>
@@ -159,27 +180,6 @@ Note, CTRL + C to shutdown the webserver.
 Use a browser to access the application:
 
 http://localhost:8000/index.html
-
---------------------------------------------------------------------------------
-
-### TaskRouter Worker Application Version 4.0
-
-This application is used by Twilio TaskRouter workers to 
-manage their availability status, accept or reject reservation calls,
-and end their reservation conference calls.
-
-Functionality:
-- Using their browser, the application allows workers to enter their identity and a password.
-- Workers manage their status: available to take a call, busy while on a call, or unavailable.
-- Status is displayed in the browser.
-- Workers can accept or reject a call reservation.
-- If a worker's reservation times out, the worker status is changed to unavailable.
-- A worker can end a call which disconnects all participants from the reservation conference call.
-- If a task is set to wrapping, it is automatically reset to completed. This avoids a worker not being able to reset their status.
-
-Worker application screen print:
-
-<img src="docTR_Worker.jpg" width="300"/>
 
 --------------------------------------------------------------------------------
 
