@@ -1,31 +1,14 @@
 # Implement a Call Workflow Application
 
-In less than two hours, implement with Twilio Studio and TaskRouter a call flow application system.
-The is the bases of a caller-agent application.
+In less than two hours, you can use Twilio Studio and TaskRouter to implement a call flow application system.
+This is the bases of a caller-agent application.
 
 When someone calls your Twilio phone number, they'll hear a message
 and get added into a task queue.
-They'll hear wait music until TaskRouter finds them an agent to talk with.
+They'll hear wait music until TaskRouter finds them an agent to talk to.
 An agent will be prompted with the option to Accept the call task.
 If the agent rejects the task, TaskRouter will ask the next available agent.
-If they click Accept, they are connected with the caller.
-
---------------------------------------------------------------------------------
-
-### TaskRouter Worker Application Version 4.0
-
-Functionality:
-- Using their browser, the application allows workers to enter their identity and a password.
-- Workers manage their status: available(online) or unavailable(offline) to take a call.
-- Workers can accept or reject a task.
-- If a worker's reservation times out, the worker status is changed to unavailable.
-- A worker can end a conference call which disconnects all participants.
-- If a task is set to wrapping after the conference call has ended,
-the task is automatically reset to completed. This allows the worker to take another call task.
-
-Application screen print:
-
-<img src="docTR_Worker.jpg" width="300"/>
+If they Accept the call task, they are connected with the caller.
 
 #### Call Work Flow
 
@@ -385,6 +368,23 @@ taskDeleteAll.js : List and delete all tasks.
 tasksReservationWrapSetCompleted.js : List task information and, if the status is wrapping, change it to completed.
 
 workspaceActivites.js : List a WorkSpace's Activities.
+
+--------------------------------------------------------------------------------
+
+### TaskRouter Worker Application Version 4.0
+
+Functionality:
+- Using their browser, the application allows workers to enter their identity and a password.
+- Workers manage their status: available(online) or unavailable(offline) to take a call.
+- Workers can accept or reject a task.
+- If a worker's reservation times out, the worker status is changed to unavailable.
+- A worker can end a conference call which disconnects all participants.
+- If a task is set to wrapping after the conference call has ended,
+the task is automatically reset to completed. This allows the worker to take another call task.
+
+Application screen print:
+
+<img src="docTR_Worker.jpg" width="300"/>
 
 --------------------------------------------------------------------------------
 
