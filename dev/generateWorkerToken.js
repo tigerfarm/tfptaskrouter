@@ -1,7 +1,7 @@
 // Documentation:
 // https://www.twilio.com/docs/taskrouter/js-sdk-v1/workspace/worker
 //
-console.log("+++ Start...");
+console.log("+++ Generate a TaskRouter access token. Not used in this application");
 // -------------------------------------------------------
 const taskrouter = require('twilio').jwt.taskrouter;
 const util = taskrouter.util;

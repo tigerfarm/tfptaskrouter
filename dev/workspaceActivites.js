@@ -2,7 +2,7 @@
 // https://www.twilio.com/docs/taskrouter/api/workspace
 // https://www.twilio.com/docs/taskrouter/api/activity
 //
-console.log("+++ Start...");
+console.log("+++ List a WorkSpace's Activities.");
 const ACCOUNT_SID = process.env.TR_ACCOUNT_SID;
 const ACCOUNT_AUTH_TOKEN = process.env.TR_AUTH_TOKEN;
 const trClient = require('twilio')(ACCOUNT_SID, ACCOUNT_AUTH_TOKEN);

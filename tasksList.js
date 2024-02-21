@@ -2,7 +2,7 @@
 // https://www.twilio.com/docs/taskrouter/api/task
 // https://www.twilio.com/docs/taskrouter/api/reservations
 //
-console.log("+++ List tasks and their reservations(if any).");
+console.log("+++ List tasks.");
 const ACCOUNT_SID = process.env.TR_ACCOUNT_SID;
 const ACCOUNT_AUTH_TOKEN = process.env.TR_AUTH_TOKEN;
 const trClient = require('twilio')(ACCOUNT_SID, ACCOUNT_AUTH_TOKEN);

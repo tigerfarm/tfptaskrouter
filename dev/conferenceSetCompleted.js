@@ -1,4 +1,4 @@
-console.log("+++ End a conference call.");
+console.log("+++ Set a conference call's status to: completed.");
 // https://www.twilio.com/docs/voice/api/conference-resource
 // 
 //          1         2         3         4         5

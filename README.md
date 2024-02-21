@@ -322,33 +322,35 @@ Worker application screen print:
 
 --------------------------------------------------------------------------------
 
-## Documentation for Developers
+## Documentation Notes for Developers
 
-#### Server side Application Programs
-
-The programs are called from the browser application using Ajax.
-
-getTrActivites.php : When initializing the browser side client, get the WorkSpace friendly name and the TaskRouter activities.
-
-generateTrToken.php?tokenPassword= + tokenPassword + &clientid= + clientId : given a client identity and the password, generate a token.
-
-conferenceEndFn.php?conferenceName= + theConference : given a conference SID, end the conference.
-
-taskReservationTaskFix.php?taskSid= + taskSid : given a task SID, if the status is wrapping, change it to completed.
+webserver.js : Node.js web server program for testing this application on a local host.
 
 #### Utility Programs
 
-conferenceListInProgress.php : List conferences that are in progress.
+conferenceList.js : List conferences.
 
-taskDeleteAll.php : remove all tasks.
+tasksList.php : List task information.
 
-taskReservationList.php : List task information.
-
-taskReservationListFix.php : List task information and, if the status is wrapping, change it to completed.
+tasksReservationList.php : List tasks and their reservations(if any).
 
 workerStatus.js : Node.js program to list the status of all the WorkSpace workers.
 
-nodeHttpServer.js : Node.js web server program for testing this application on a local host.
+#### Dev Utility Programs
+
+conferenceSetCompleted.js : Set a conference call's status to: completed.
+
+generateWorkerToken.js : Generate a TaskRouter Worker access token.
+
+taskReservationList.js : List a task's information.
+
+taskSetWrapToCompleted.js : If task status is "wrapping", changed to: "completed".
+
+taskDeleteAll.js : List and delete all tasks.
+
+tasksReservationWrapSetCompleted.js : List task information and, if the status is wrapping, change it to completed.
+
+workspaceActivites.js : List a WorkSpace's Activities.
 
 --------------------------------------------------------------------------------
 

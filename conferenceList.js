@@ -10,7 +10,8 @@ var authToken = process.env.TR_AUTH_TOKEN;
 var client = require('twilio')(accountSid, authToken);
 client.conferences.each({
     // friendlyName: 'support',
-    // status: 'completed'          // in-progress completed 
+    // status: 'in-progress'
+    // status: 'completed'
 },
         conferences => {
             dateString = conferences.dateCreated;
