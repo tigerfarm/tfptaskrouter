@@ -190,106 +190,6 @@ TaskRouter workers will use their web browser to manage their status:
 
 Go to the TaskRouter worker website application
 [link](http://localhost:8000/index.html).
-````
-The workspace activity options are listed in the Log messages:
-...
-> + ActivitySid_Offline = WA31703104b45cd069126e71c5de67a869
-> + ActivitySid_Available = WA87258175ab8843ec6d75e54274eb456c
-> + ActivitySid_Unavailable = WAd869170e0a0d27f9846c070b0edcaf79
-
-I enter my identity: dave, and the application password, and click Get access token.
-Logs:
-> Refresh the TaskRouter token using client id: dave
-> TaskRouter Worker token refreshed, stringlength :3088:
-> registerTaskRouterCallbacks().
-> TaskRouter token refreshed.
-> Worker registered: dave.
-> Skills: support
-> Current activity is: Offline
-
-I click Go online.
-
-I check worker status and see that I'm (dave) is Available(online).
-$ node workerStatus.js
-+++ Start.
-++ List worker activity status.
-+ WK1ab6ad88a07a856306c88ccaab3aa56a : edith : Offline
-+ WKb9302b30213ee6a76c10cf8b4cf94612 : dave : Available
-````
-
-From the voice caller's side:
-````
-I make a voice call to my TaskRouter Twilio phone number.
-The call is answered by the Studio flow IVR:
-The Studio IVR messages is said (Say widget) and I'm put on hold in a TaskRouter workflow queue.
-$ node tasksList.js
-+++ List tasks and their reservations(if any).
-++ SID: WT785ef314ded948051e735753ced049bc assignmentStatus: pending, Queue:support
-At this time, there are no reservations.
-$ node tasksReservationsList.js
-+++ List tasks and their reservations(if any).
-++ SID: WTa3ee1296c9f4bf072a9ed615371d5200 assignmentStatus: pending, Queue:support
-````
-
-Interactions:
-````
-Since the TaskRouter agent, "dave", is offered the option to Accept or Reject the task.
-The workflow has a Task Reservation Timeout of 10 seconds. 
-Dave does not click one of the option with 10 seconds, the reservation times out:
-> reservation.created: You are reserved to handle a call from: +16505551111
-> Reservation SID: WRc3d7d5e3ef968eda3038b67db775f0c5
-> reservation.task.sid: WTa3ee1296c9f4bf072a9ed615371d5200
-> Worker activity updated to: Offline
-> taskSid = WTa3ee1296c9f4bf072a9ed615371d5200
-> Reservation timed out: WRc3d7d5e3ef968eda3038b67db775f0c5
-Dave is set to offline.
-
-Dave goes back online, reservation is set to status: pending.
-$ node tasksReservationsList.js
-+++ List tasks and their reservations(if any).
-++ SID: WTa3ee1296c9f4bf072a9ed615371d5200 assignmentStatus: reserved, Queue:support
-++ SID: WTa3ee1296c9f4bf072a9ed615371d5200 assignmentStatus: reserved Task Queue:support Reservation sid:WRc3d7d5e3ef968eda3038b67db775f0c5 status:timeout workerName:dave
-++ SID: WTa3ee1296c9f4bf072a9ed615371d5200 assignmentStatus: reserved Task Queue:support Reservation sid:WR1f2471e9da9af75b45cb6d67e353f029 status:pending workerName:dave
-
-Dave goes back online and clicks Accept,
-+ reservation is set to status: accepted.
-$ node tasksReservationsList.js
-+++ List tasks and their reservations(if any).
-++ SID: WTa3ee1296c9f4bf072a9ed615371d5200 assignmentStatus: assigned, Queue:support
-...
-++ SID: WTa3ee1296c9f4bf072a9ed615371d5200 assignmentStatus: assigned Task Queue:support Reservation sid:WRf1b1bf3c9bc5fc6c26d36509f913f791 status:accepted workerName:dave
-
-+ Dave is connected to the caller. Log message:
-> Conference SID: CFa000943a3a04bbe352f6dffe8d8921e1
-The conference call has the status: in-progress.
-$ node conferenceList.js
-+++ List conference calls.
-+  SID: CFa000943a3a04bbe352f6dffe8d8921e1 status: in-progress friendlyName: WTa3ee1296c9f4bf072a9ed615371d5200
-
-The reservation list program lists:
-+ The task information and which agent is handling the task.
-+ The task attributes list the task's converference call information.
-$ node tasksReservationsList.js 
-+++ List tasks and their reservations(if any).
-++ SID: WTa3ee1296c9f4bf072a9ed615371d5200 assignmentStatus: assigned, Queue:support
-+++ theAttributes from:+16505551111 conference.sid:CFa000943a3a04bbe352f6dffe8d8921e1 worker:CA40d37044249a5270707eb96bf9f4a1df customer:CA22a129993f8efb9403b90df060b28e1a
-...
-++ SID: WTa3ee1296c9f4bf072a9ed615371d5200 assignmentStatus: assigned Task Queue:support Reservation sid:WRf1b1bf3c9bc5fc6c26d36509f913f791 status:accepted workerName:dave
-
-The worker application log message:
-> Worker activity updated to: Unavailable
-$ node workerStatus.js
-+++ Start.
-++ List worker activity status.
-+ WKb9302b30213ee6a76c10cf8b4cf94612 : dave : Unavailable
-
-The caller hangs up. The conference is still active, and other statuses are the same.
-In the worker application, dave clicks End conference.
-The conference is ended (set to status completed).
-Worker(dave) activity updated to: Offline.
-````
-
---------------------------------------------------------------------------------
 
 In your browser, go to your TaskRouter Workers Application.
 - WorkSpace name is displayed: writers.
@@ -301,6 +201,131 @@ In your browser, go to your TaskRouter Workers Application.
 - Click Go online,to be available for a call reservation.
 
 <img src="docTR_WorkerOnline.jpg" width="300"/>
+
+When first coThe workspace activity options are listed in the Log messages:
+````
+...
+> + ActivitySid_Offline = WA31703104b45cd069126e71c5de67a869
+> + ActivitySid_Available = WA87258175ab8843ec6d75e54274eb456c
+> + ActivitySid_Unavailable = WAd869170e0a0d27f9846c070b0edcaf79
+
+I enter my identity: dave, and the application password.
+Click Get access token.
+Logs:
+> Refresh the TaskRouter token using client id: dave
+> TaskRouter Worker token refreshed, stringlength :3088:
+> registerTaskRouterCallbacks().
+> TaskRouter token refreshed.
+> Worker registered: dave.
+> Skills: support
+> Current activity is: Offline
+
+I have a TaskRouter Worker token.
+Click Go online.
+I check worker status and see that I'm (dave) is Available(online).
+$ node workerStatus.js
++++ Start.
+++ List worker activity status.
++ WK1ab6ad88a07a856306c88ccaab3aa56a : edith : Offline
++ WKb9302b30213ee6a76c10cf8b4cf94612 : dave : Available
+````
+
+From the voice caller's side:
+````
+I make a voice call to my TaskRouter Twilio phone number.
+The call is answered by the Studio flow IVR.
+
+The Studio IVR messages is said (Say widget) and I'm put on hold in a TaskRouter workflow queue:
+$ node voiceQueueList.js
+++ Get voice queue list.
++  DateCreated:Sep 23 2020  SID:QU362afc106606164d74151aa4750a3160 currentSize:1    maxSize:100 friendlyName:WW1a2796889d5420ee5e715bf2ae460a99 averageWaitTime:18
+
+A task is created:
+$ node tasksList.js
++++ List tasks.
+++ SID: WT4d990906295fe68dc399bf37b2cbfe5b assignmentStatus: pending, Queue:support
+````
+
+Interactions:
+````
+Dave's status is: Available(onelin)
+Dave is offered the option to Accept or Reject the task.
+The workflow has a Task Reservation Timeout of 10 seconds. 
+Dave does not click one of the option with 10 seconds, the reservation times out:
+> reservation.created: You are reserved to handle a call from: +18663117002
+> Reservation SID: WRdbd876a888b28be2bde65f95d4c93019
+> reservation.task.sid: WT4d990906295fe68dc399bf37b2cbfe5b
+> Worker activity updated to: Offline
+> taskSid = WT4d990906295fe68dc399bf37b2cbfe5b
+> Reservation timed out: WRdbd876a888b28be2bde65f95d4c93019
+
+Dave is set to offline, Reservation status:timeout:
+$ node tasksReservationsList.js
++++ List tasks and their reservations(if any).
+++ SID: WT4d990906295fe68dc399bf37b2cbfe5b assignmentStatus: pending, Queue:support
+++ SID: WT4d990906295fe68dc399bf37b2cbfe5b assignmentStatus: pending Task Queue:support Reservation sid:WRdbd876a888b28be2bde65f95d4c93019 status:timeout workerName:dave
+
+Dave goes back online and clicks Accept.
+> reservation.created: You are reserved to handle a call from: +18663117002
+> Reservation SID: WR73d497bfe50fdee8c68477763121e564
+> reservation.task.sid: WT4d990906295fe68dc399bf37b2cbfe5b
+
+But called by TaskRouter does not answer.
+> Reservation canceled: WR5289882026894a2d7a037d8e5c32ceaa
+> Worker activity updated to: Offline
+> Reservation timed out: WR73d497bfe50fdee8c68477763121e564
+The reservation is cancelled.
+$ node tasksReservationsList.js
+...
+++ SID: WT4d990906295fe68dc399bf37b2cbfe5b assignmentStatus: pending Task Queue:support Reservation sid:WR5289882026894a2d7a037d8e5c32ceaa status:canceled workerName:dave
+
+Dave goes back online and clicks Accept.
+When called, I answer the phone. Logs:
+> Conference SID: CFbe1c7137e028b6ed411fdd2aa12fbecb
+> Worker activity updated to: Unavailable
+> taskSid = WT4d990906295fe68dc399bf37b2cbfe5b
+
+Task status: accepted. The task attributes contain the conference call information.
+$ node tasksReservationsList.js
++++ List tasks and their reservations(if any).
+++ SID: WT4d990906295fe68dc399bf37b2cbfe5b assignmentStatus: assigned, Queue:support
++++ theAttributes from:+18663117002 conference.sid:CFbe1c7137e028b6ed411fdd2aa12fbecb worker:CA681c3a7bfc94c1b4823fc3f2e4eb99f6 customer:CA002d535f41152c11893f284398cfdb14
+....
+++ SID: WT4d990906295fe68dc399bf37b2cbfe5b assignmentStatus: assigned Task Queue:support Reservation sid:WR39728a4f4b1883993472d3983a48dc10 status:accepted workerName:dave
+
+Dave's worker status is unavailable because he is on a call.
+$ node workerStatus.js
++++ Start.
+++ List worker activity status.
++ WK1ab6ad88a07a856306c88ccaab3aa56a : edith : Offline
++ WKb9302b30213ee6a76c10cf8b4cf94612 : dave : Unavailable
+
+The task voice queue is empty.
+$ node voiceQueueList.js
+++ Get voice queue list.
++  DateCreated:Sep 23 2020  SID:QU362afc106606164d74151aa4750a3160 currentSize:0    maxSize:100 friendlyName:WW1a2796889d5420ee5e715bf2ae460a99 averageWaitTime:0
+
+Conference call status: in-progress.
+Note, the friendlyName is the task SID: WT4d990906295fe68dc399bf37b2cbfe5b.
+$ node conferenceList.js
++++ List conference calls.
++  SID: CFbe1c7137e028b6ed411fdd2aa12fbecb status: in-progress friendlyName: WT4d990906295fe68dc399bf37b2cbfe5b
+
+Dave clicks End conference and he and the caller are disconnected.
+$ node conferenceList.js
++++ List conference calls.
++  SID: CFbe1c7137e028b6ed411fdd2aa12fbecb status: completed friendlyName: WT4d990906295fe68dc399bf37b2cbfe5b
+
+Dave is status: offline.
+Note, the task goes from accepted to wrapping.
+An program process sets the task goes from accepted to wrapping
+and Dave status becomes offline.
+$ node workerStatus.js
+...
++ WKb9302b30213ee6a76c10cf8b4cf94612 : dave : Offline
+````
+
+--------------------------------------------------------------------------------
 
 ### Test the Call Work Flow System
 
