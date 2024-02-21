@@ -10,7 +10,7 @@
 //  $ node websever.js
 // 
 // -----------------------------------------------------------------------------
-console.log("+++ TaskRouter application web server is starting up.");
+console.log("+++ TaskRouter application web server is starting up, version 4.0.");
 // -----------------------------------------------------------------------------
 // 
 var makeRequest = require('request');

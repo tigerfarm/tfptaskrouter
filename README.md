@@ -17,7 +17,8 @@ The callers will listen to music while TaskRouter arranges an agent to take thei
 2. [Create](README.md#create-an-ivr-studio-flow-to-manage-incoming-calls) an Studio IVR to welcome the caller and put them into the TaskRouter queue.
 3. [Configure](README.md#configure-your-twilio-phone-number-to-use-the-studio-ivr) your Twilio phone number to use the Studio IVR.
 4. [Implementation](README.md#local-computer-implementation) on your local computer.
-5. [Test](README.md#test-the-call-work-flow-system) the call work flow system.
+5. [Work Application](README.md#taskrouter-worker-application-version-40) to manage their availability status.
+6. [Test](README.md#test-the-call-work-flow-system) the call work flow system.
 
 Click [here](https://www.youtube.com/watch?v=OElX06i40Mg) for a video of me walking through the steps.
 Note, the application in the video is an older PHP app, however it works basically the same as this NodeJS application.
@@ -161,6 +162,28 @@ http://localhost:8000/index.html
 
 --------------------------------------------------------------------------------
 
+## TaskRouter Worker Application Version 4.0
+
+This application is used by Twilio TaskRouter workers to 
+manage their availability status, accept or reject reservation calls,
+and end their reservation conference calls.
+
+## Functionality
+
+- Using their browser, the application allows workers to enter their identity and a password.
+- Workers manage their status: available to take a call, busy while on a call, or unavailable.
+- Status is displayed in the browser.
+- Workers can accept or reject a call reservation.
+- If a worker's reservation times out, the worker status is changed to unavailable.
+- A worker can end a call which disconnects all participants from the reservation conference call.
+- If a task is set to wrapping, it is automatically reset to completed. This avoids a worker not being able to reset their status.
+
+Worker application screen print:
+
+<img src="docTR_Worker.jpg" width="300"/>
+
+--------------------------------------------------------------------------------
+
 ### Test the Application on Your Computer
 
 TaskRouter workers will use their web browser to manage their status: 
@@ -301,28 +324,6 @@ You now have a working and tested TaskRouter implementation.
 - Handle the case where no workers are available and the Workflow times out. Create and test a [Studio voicemail](https://www.twilio.com/docs/studio/widget-library#record-voicemail) flow. Link it into your Workflow timeout option.
 - Add business hours to your IVR. If a caller calls outside of the [business hours](https://www.twilio.com/blog/2018/06/custom-javascript-twilio-functions-code-studio-flows.html), put them straight into voicemail.
 - Implement a Twilio Client so that agents can receive calls on their laptop. Click [here](https://github.com/tigerfarm/OwlClient) for my sample Twilio Client which has more features such as putting callers on hold.
-
---------------------------------------------------------------------------------
-
-## TaskRouter Worker Application Version 3.2
-
-This application is used by Twilio TaskRouter workers to 
-manage their availability status, accept or reject reservation calls,
-and end their reservation conference calls.
-
-## Functionality
-
-- Using their browser, the application allows workers to enter their identity and a password.
-- Workers manage their status: available to take a call, busy while on a call, or unavailable.
-- Status is displayed in the browser.
-- Workers can accept or reject a call reservation.
-- If a worker's reservation times out, the worker status is changed to unavailable.
-- A worker can end a call which disconnects all participants from the reservation conference call.
-- If a task is set to wrapping, it is automatically reset to completed. This avoids a worker not being able to reset their status.
-
-Worker application screen print:
-
-<img src="docTR_Worker.jpg" width="300"/>
 
 --------------------------------------------------------------------------------
 
