@@ -16,6 +16,7 @@ The callers will listen to music while TaskRouter arranges an agent to take thei
 1. [Configure](README.md#configure-your-taskrouter-workspace) your Twilio TaskRouter Workspace.
 2. [Create](README.md#create-an-ivr-studio-flow-to-manage-incoming-calls) an Studio IVR to welcome the caller and put them into the TaskRouter queue.
 3. [Configure](README.md#configure-your-twilio-phone-number-to-use-the-studio-ivr) your Twilio phone number to use the Studio IVR.
+4. [Implementation](README.md#local-computer-implementation) on your local computer.
 5. [Test](README.md#test-the-call-work-flow-system) the call work flow system.
 
 Click [here](https://www.youtube.com/watch?v=OElX06i40Mg) for a video of me walking through the steps.
@@ -28,22 +29,21 @@ Click [here](https://www.twilio.com/docs/taskrouter/api) for the Twilio TaskRout
 - For testing, you will need at least 2 phone numbers; for example two mobile phone numbers: 
 one to be the caller, the other phone number for the worker (agent).
 
-These are the setup instructions which are located on this GitHub repository:
-
-https://github.com/tigerfarm/tfptaskrouter/blob/master/README.md
+These are the setup instructions which are located on this 
+[tfptaskrouter](https://github.com/tigerfarm/tfptaskrouter/blob/master/README.md) GitHub repository.
 
 --------------------------------------------------------------------------------
 
 ### Configure your TaskRouter Workspace
 
-A caller entered into a Workspace's Workflow.
-The Workflow puts the caller into a Task Queue.
-The Workflow finds a Worker to take the call that is in the Task Queue.
+A task begins with a caller being entered into a Workspace's Workflow.
+The Workflow puts the caller into a Task Queue which is a voice queue.
+The Workflow finds a Worker to take the call that is in the queue.
+
 A Worker can set their Activities availablity status.
 A Worker has attributes to match them to one or more Task Queues.
 
-Go to the TaskRouter dashboard:
-https://www.twilio.com/console/taskrouter/dashboard 
+Go to the [TaskRouter dashboard](https://www.twilio.com/console/taskrouter/dashboard):
 
 Create a Workspace, and set:
 - Name: writers.
@@ -101,7 +101,6 @@ Click Save. Click Publish. The Studio is complete and ready to use.
 
 In the Twilio Console, [buy a phone number](https://www.twilio.com/console/phone-numbers/search), if you don't already have one:
 
-
 In the phone number’s configuration page,
 - Set Voice & Fax, A Call Comes In, to: Studio Flow / Writers IVR
 - Click Save.
@@ -111,15 +110,21 @@ Test, by using your mobile phone to call your IVR Twilio phone number.
 - You will be put into the TaskRouter queue and hear the wait music.
 - Disconnect/hangup the call. Your IVR is successfully tested.
 
+Check the queue has 1 caller (currentSize:1):
+````
+$ node voiceQueueList.js
+++ Get voice queue list.
++  DateCreated:Sep 23 2020  SID:QU362afc106606164d74151aa4750a3160 currentSize:1    maxSize:100 friendlyName:WW1a2796889d5420ee5e715bf2ae460a99 averageWaitTime:106
+````
+Note, the friendlyName is the Workflow SID.
+
 --------------------------------------------------------------------------------
 
 ### Local Computer Implementation
 
 The application has a NodeJS HTTP webserver.
 
-Download the project zip file.
-
-https://github.com/tigerfarm/tfptaskrouter
+Download the [tfptaskrouter repository](https://github.com/tigerfarm/tfptaskrouter) zip file.
 
 1. Click Clone or Download. Click Download ZIP.
 2. Unzip the file into a work directory.
@@ -138,7 +143,6 @@ Environement variables:
 - TR_TOKEN_PASSWORD : your token password (Password is required to create tokens. The password can be any string you want to use.)
 - WORKSPACE_SID : your TaskRouter workspace SID
 
-
 Run the NodeJS HTTP server.
 ````
 $ node webserver.js 
@@ -155,15 +159,15 @@ Use a browser to access the application:
 
 http://localhost:8000/index.html
 
-#### Test the Application on Your Computer
+--------------------------------------------------------------------------------
 
-Agents will use their web browser, on their computer, to manage their status: 
-offline, or available to accept calls.
+### Test the Application on Your Computer
 
-This application is ready to run from command line.
+TaskRouter workers will use their web browser to manage their status: 
+"offline" or "online" available to accept tasks.
 
-From the TaskRouter worker's side, I go to the TaskRouter worker website application
-[link](http://localhost:8000/tfptaskrouter/index.html).
+Go to the TaskRouter worker website application
+[link](http://localhost:8000/index.html).
 ````
 The workspace activity options are listed in the Log messages:
 ...
