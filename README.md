@@ -1,10 +1,14 @@
-# Implement a Call Work Flow System
+# Implement a Call Workflow Application
 
-With Twilio Studio and TaskRouter, in less than two hours, you can set up a call flow, 
+Implement with Twilio Studio and TaskRouter. In less than two hours, you can set up a call flow, 
 which is the bases of a caller-agent application system.
-When a caller is added into the queue, TaskRouter creates a reservation and then asks an agent if they will accept the call.
-The agent has the option to Accept, and be connected with the caller; or to Reject the call.
-If the call is rejected, TaskRouter will ask the next available agent.
+
+When someone calls your Twilio phone number, they hear a message
+and get added into a task queue.
+TaskRouter then asks an agent if they will accept the call.
+The agent is prompted with the option to Accept the task.
+If the agent rejects the task, TaskRouter will ask the next available agent.
+If they click Accept, they are connected with the caller.
 
 --------------------------------------------------------------------------------
 
@@ -82,7 +86,7 @@ Create a Workflow, and set:
 - Default queue: support.
 
 Create a Worker, and set:
-- Name: charles.
+- Name: dave.
 - Attributes to: {"skills":["support"],"contact_uri":"+16505551111"}. Replace 16505551111, with your mobile phone number. This is the number that TaskRouter will use to call the worker.
 
 View Your TaskRouter Activities:
@@ -193,7 +197,7 @@ Go to the TaskRouter worker website application
 
 In your browser, go to your TaskRouter Workers Application.
 - WorkSpace name is displayed: writers.
-- Enter your worker name: charles.
+- Enter your worker name: dave.
 - Enter your token password.
 - Click Get access token. Worker status is displayed: Offline.
 - Click Go online. Worker status is displayed: Available.
