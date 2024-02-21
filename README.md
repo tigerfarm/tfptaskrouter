@@ -1,12 +1,12 @@
 # Implement a Call Workflow Application
 
-Implement with Twilio Studio and TaskRouter. In less than two hours, you can set up a call flow, 
-which is the bases of a caller-agent application system.
+In less than two hours, implement with Twilio Studio and TaskRouter a call flow application system.
+The is the bases of a caller-agent application.
 
-When someone calls your Twilio phone number, they hear a message
+When someone calls your Twilio phone number, they'll hear a message
 and get added into a task queue.
-TaskRouter then asks an agent if they will accept the call.
-The agent is prompted with the option to Accept the task.
+They'll hear wait music until TaskRouter finds them an agent to talk with.
+An agent will be prompted with the option to Accept the call task.
 If the agent rejects the task, TaskRouter will ask the next available agent.
 If they click Accept, they are connected with the caller.
 
@@ -20,9 +20,10 @@ Functionality:
 - Workers can accept or reject a task.
 - If a worker's reservation times out, the worker status is changed to unavailable.
 - A worker can end a conference call which disconnects all participants.
-- If a task is set to wrapping, it is automatically reset to completed. This avoids a worker not being able to reset their status.
+- If a task is set to wrapping after the conference call has ended,
+the task is automatically reset to completed. This allows the worker to take another call task.
 
-Worker application screen print:
+Application screen print:
 
 <img src="docTR_Worker.jpg" width="300"/>
 
@@ -33,9 +34,10 @@ Worker application screen print:
 --------------------------------------------------------------------------------
 ## Implementing the Call Work Flow System
 
-This exercise will walk you through the steps to 
-configure your Twilio phone number to receive calls and put the callers into a queue.
-The callers will listen to music while TaskRouter arranges an agent to take their call.
+These are steps to configure a basic TaskRouter setup,
+setup a Studio IVR flow,
+configure your Twilio phone number to use the flow,
+run and test the TaskRouter Worker website application.
 
 1. [Configure](README.md#configure-your-taskrouter-workspace) your Twilio TaskRouter Workspace.
 2. [Create](README.md#create-an-ivr-studio-flow-to-manage-incoming-calls) an Studio IVR to welcome the caller and put them into the TaskRouter queue.
@@ -61,7 +63,7 @@ These are the setup instructions which are located on this
 
 ### Configure your TaskRouter Workspace
 
-A task begins with a caller being entered into a Workspace's Workflow.
+A task begins with a caller being added into a Workspace's Workflow.
 The Workflow puts the caller into a Task Queue which is a voice queue.
 The Workflow finds a Worker to take the call that is in the queue.
 
@@ -88,10 +90,10 @@ Create a Worker, and set:
 - Name: dave.
 - Attributes to: {"skills":["support"],"contact_uri":"+16505551111"}. Replace 16505551111, with your mobile phone number. This is the number that TaskRouter will use to call the worker.
 
-View Your TaskRouter Activities:
+View Your TaskRouter Worker Activities:
 - Offline, cannot be assigned a task
 - Available(online) to be assign a task
-- Unavailable, cannot be assigned a task
+- Unavailable, the worker is working on a task
 
 --------------------------------------------------------------------------------
 
@@ -255,7 +257,7 @@ Dave's status is: Available(onelin)
 Dave is offered the option to Accept or Reject the task.
 The workflow has a Task Reservation Timeout of 10 seconds. 
 Dave does not click one of the option with 10 seconds, the reservation times out:
-> reservation.created: You are reserved to handle a call from: +18663117002
+> reservation.created: You are reserved to handle a call from: +16505551111
 > Reservation SID: WRdbd876a888b28be2bde65f95d4c93019
 > reservation.task.sid: WT4d990906295fe68dc399bf37b2cbfe5b
 > Worker activity updated to: Offline
@@ -269,7 +271,7 @@ $ node tasksReservationsList.js
 ++ SID: WT4d990906295fe68dc399bf37b2cbfe5b assignmentStatus: pending Task Queue:support Reservation sid:WRdbd876a888b28be2bde65f95d4c93019 status:timeout workerName:dave
 
 Dave goes back online and clicks Accept.
-> reservation.created: You are reserved to handle a call from: +18663117002
+> reservation.created: You are reserved to handle a call from: +16505551111
 > Reservation SID: WR73d497bfe50fdee8c68477763121e564
 > reservation.task.sid: WT4d990906295fe68dc399bf37b2cbfe5b
 
@@ -292,7 +294,7 @@ Task status: accepted. The task attributes contain the conference call informati
 $ node tasksReservationsList.js
 +++ List tasks and their reservations(if any).
 ++ SID: WT4d990906295fe68dc399bf37b2cbfe5b assignmentStatus: assigned, Queue:support
-+++ theAttributes from:+18663117002 conference.sid:CFbe1c7137e028b6ed411fdd2aa12fbecb worker:CA681c3a7bfc94c1b4823fc3f2e4eb99f6 customer:CA002d535f41152c11893f284398cfdb14
++++ theAttributes from:+16505551111 conference.sid:CFbe1c7137e028b6ed411fdd2aa12fbecb worker:CA681c3a7bfc94c1b4823fc3f2e4eb99f6 customer:CA002d535f41152c11893f284398cfdb14
 ....
 ++ SID: WT4d990906295fe68dc399bf37b2cbfe5b assignmentStatus: assigned Task Queue:support Reservation sid:WR39728a4f4b1883993472d3983a48dc10 status:accepted workerName:dave
 
