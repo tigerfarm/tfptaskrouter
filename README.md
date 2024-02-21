@@ -17,11 +17,9 @@ If they Accept the call task, they are connected with the caller.
 --------------------------------------------------------------------------------
 ## Implementing the Call Work Flow System
 
-These are steps to configure a basic TaskRouter setup,
-setup a Studio IVR flow,
-configure your Twilio phone number to use the flow,
-run and test the TaskRouter Worker website application.
-
+Steps to configure a TaskRouter workspace,
+setup a Studio IVR flow with a Twilio phone number,
+implement and test the TaskRouter Worker website application:
 1. [Configure](README.md#configure-your-taskrouter-workspace) your Twilio TaskRouter Workspace.
 2. [Create](README.md#create-an-ivr-studio-flow-to-manage-incoming-calls) an Studio IVR to welcome the caller and put them into the TaskRouter queue.
 3. [Configure](README.md#configure-your-twilio-phone-number-to-use-the-studio-ivr) your Twilio phone number to use the Studio IVR.
