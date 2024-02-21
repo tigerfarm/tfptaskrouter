@@ -183,7 +183,7 @@ Worker application screen print:
 
 --------------------------------------------------------------------------------
 
-### Test the Application on Your Computer
+### Test the Application
 
 TaskRouter workers will use their web browser to manage their status: 
 "offline" or "online" available to accept tasks.
