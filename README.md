@@ -162,14 +162,13 @@ http://localhost:8000/index.html
 
 --------------------------------------------------------------------------------
 
-## TaskRouter Worker Application Version 4.0
+### TaskRouter Worker Application Version 4.0
 
 This application is used by Twilio TaskRouter workers to 
 manage their availability status, accept or reject reservation calls,
 and end their reservation conference calls.
 
-## Functionality
-
+Functionality:
 - Using their browser, the application allows workers to enter their identity and a password.
 - Workers manage their status: available to take a call, busy while on a call, or unavailable.
 - Status is displayed in the browser.
