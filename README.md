@@ -188,7 +188,8 @@ In your browser, go to your TaskRouter Workers Application.
 
 <img src="docTR_WorkerOnline.jpg" width="300"/>
 
-When first coThe workspace activity options are listed in the Log messages:
+When the worker first connects to the application, 
+the workspace activity options are listed in the Log messages:
 ````
 ...
 > + ActivitySid_Offline = WA31703104b45cd069126e71c5de67a869
@@ -234,7 +235,8 @@ $ node tasksList.js
 
 Interactions:
 ````
-Dave's status is: Available(onelin)
+---------
+Dave's status is: Available(oneline)
 Dave is offered the option to Accept or Reject the task.
 The workflow has a Task Reservation Timeout of 10 seconds. 
 Dave does not click one of the option with 10 seconds, the reservation times out:
@@ -245,12 +247,13 @@ Dave does not click one of the option with 10 seconds, the reservation times out
 > taskSid = WT4d990906295fe68dc399bf37b2cbfe5b
 > Reservation timed out: WRdbd876a888b28be2bde65f95d4c93019
 
-Dave is set to offline, Reservation status:timeout:
+Dave is automatically set to offline, Reservation status:timeout.
 $ node tasksReservationsList.js
 +++ List tasks and their reservations(if any).
 ++ SID: WT4d990906295fe68dc399bf37b2cbfe5b assignmentStatus: pending, Queue:support
 ++ SID: WT4d990906295fe68dc399bf37b2cbfe5b assignmentStatus: pending Task Queue:support Reservation sid:WRdbd876a888b28be2bde65f95d4c93019 status:timeout workerName:dave
 
+---------
 Dave goes back online and clicks Accept.
 > reservation.created: You are reserved to handle a call from: +16505551111
 > Reservation SID: WR73d497bfe50fdee8c68477763121e564
@@ -265,6 +268,7 @@ $ node tasksReservationsList.js
 ...
 ++ SID: WT4d990906295fe68dc399bf37b2cbfe5b assignmentStatus: pending Task Queue:support Reservation sid:WR5289882026894a2d7a037d8e5c32ceaa status:canceled workerName:dave
 
+---------
 Dave goes back online and clicks Accept.
 When called, I answer the phone. Logs:
 > Conference SID: CFbe1c7137e028b6ed411fdd2aa12fbecb
@@ -297,6 +301,7 @@ $ node conferenceList.js
 +++ List conference calls.
 +  SID: CFbe1c7137e028b6ed411fdd2aa12fbecb status: in-progress friendlyName: WT4d990906295fe68dc399bf37b2cbfe5b
 
+---------
 Dave clicks End conference and he and the caller are disconnected.
 $ node conferenceList.js
 +++ List conference calls.
