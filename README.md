@@ -112,14 +112,14 @@ In the phone number’s configuration page,
 
 Test, by using your mobile phone to call your IVR Twilio phone number.
 - You will hear the Gather widget welcome message.
-- You will be put into the TaskRouter queue and hear the wait music.
-Check the queue has 1 caller (currentSize:1):
+- You will be put into the TaskRouter queue(a voice queue) and hear the wait music.
+Check that the queue has 1 caller (currentSize:1):
 ````
 $ node voiceQueueList.js
 ++ Get voice queue list.
 +  DateCreated:Sep 23 2020  SID:QU362afc106606164d74151aa4750a3160 currentSize:1    maxSize:100 friendlyName:WW1a2796889d5420ee5e715bf2ae460a99 averageWaitTime:106
 ````
-Note, the friendlyName is the Workflow SID.
+Note, the friendlyName is the workflow SID.
 - Disconnect/hangup the call. Your IVR is successfully tested.
 
 --------------------------------------------------------------------------------
@@ -145,7 +145,7 @@ List of "require" modules used: twilio, request, express, path, and url.
 Environement variables:
 - TR_ACCOUNT_SID : your Twilio account SID (starts with "AC", available from Twilio Console)
 - TR_AUTH_TOKEN : your Twilio account auth token (available from Twilio Console, click view)
-- TR_TOKEN_PASSWORD : your token password (Password is required to create tokens. The password can be any string you want to use.)
+- TR_TOKEN_PASSWORD : application password that is used by a worker to receive an access tokens.
 - WORKSPACE_SID : your TaskRouter workspace SID
 
 Run the NodeJS HTTP server.
@@ -158,11 +158,9 @@ $ node webserver.js
 + Workspace friendlyName: writers
 ...
 ````
-Note, CTRL + C to shutdown the webserver.
+Note, CTRL + c to shutdown the webserver.
 
-Use a browser to access the application:
-
-http://localhost:8000/index.html
+Use a browser to access the application: http://localhost:8000/index.html
 
 --------------------------------------------------------------------------------
 
