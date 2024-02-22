@@ -3,10 +3,10 @@
 In less than two hours, you can use Twilio Studio and TaskRouter to implement a call flow application system.
 This is the bases of a caller-agent application.
 
-When someone calls your Twilio phone number, they'll hear a message
-and get added into a task queue.
-They'll hear wait music until TaskRouter finds them an agent to talk to.
-An agent will be prompted with the option to Accept the call task.
+When someone calls your Twilio phone number, they'll hear an IVR welcome message
+and get added into a workflow task queue.
+They'll hear music wait while they wait for TaskRouter to find them an agent.
+TaskRouter will prompt an agent with the option to Accept the call task.
 If the agent rejects the task, TaskRouter will ask the next available agent.
 If they Accept the call task, they are connected with the caller.
 
@@ -21,20 +21,18 @@ Steps to configure a TaskRouter workspace,
 setup a Studio IVR flow with a Twilio phone number,
 implement and test the TaskRouter Worker website application:
 1. [Configure](README.md#configure-your-taskrouter-workspace) your Twilio TaskRouter Workspace.
-2. [Create](README.md#create-an-ivr-studio-flow-to-manage-incoming-calls) an Studio IVR to welcome the caller and put them into the TaskRouter queue.
-3. [Configure](README.md#configure-your-twilio-phone-number-to-use-the-studio-ivr) your Twilio phone number to use the Studio IVR.
+2. [Create](README.md#create-an-ivr-studio-flow-to-manage-incoming-calls) an Studio IVR to welcome the caller and put them into the TaskRouter workflow queue.
+3. [Configure](README.md#configure-your-twilio-phone-number-to-use-the-studio-ivr-flow) your Twilio phone number to use the Studio IVR.
 4. [Implementation](README.md#local-computer-implementation) on your local computer.
 5. [Test](README.md#test-the-application) the call work flow application system.
 
 Click [here](https://www.youtube.com/watch?v=OElX06i40Mg) for a video of me walking through the steps.
 Note, the application in the video is an older PHP app, however it works basically the same as this NodeJS application.
 
-Click [here](https://www.twilio.com/docs/taskrouter/api) for the Twilio TaskRouter REST API documentation.
-
 #### Implementation requirements:
 - You will need a [Twilio account](http://twilio.com/console). A free Trial account will work for testing.
-- For testing, you will need at least 2 phone numbers; for example two mobile phone numbers: 
-one to be the caller, the other phone number for the worker (agent).
+- For testing, you will need at least 2 phone numbers: 
+one to be the caller, and the other for the worker (agent).
 
 These are the setup instructions which are located on this 
 [tfptaskrouter](https://github.com/tigerfarm/tfptaskrouter/blob/master/README.md) GitHub repository.
@@ -43,34 +41,34 @@ These are the setup instructions which are located on this
 
 ### Configure your TaskRouter Workspace
 
-A task begins with a caller being added into a Workspace's Workflow.
-The Workflow puts the caller into a Task Queue which is a voice queue.
-The Workflow finds a Worker to take the call that is in the queue.
+A task begins with a caller being added into a workspace's workflow.
+The workflow puts the caller into a task queue which is a voice queue.
+The workflow finds a worker to take the call that is in the queue.
 
-A Worker can set their Activities availablity status.
-A Worker has attributes to match them to one or more Task Queues.
+A worker can set their activity availablity status.
+A worker has attributes to match them to one or more task queues.
 
 Go to the [TaskRouter dashboard](https://www.twilio.com/console/taskrouter/dashboard):
 
 Create a Workspace, and set:
 - Name: writers.
 
-Create a TaskQueue for callers, and set:
-- TaskQueue Name to: support.
+Create a Task Queue for callers, and set:
+- Task Queue Name to: support.
 - Max Reserved Workers: 1.
 - Queue expression: skills HAS "support".
-- Note, workers that have support call skills("skills":["support"]) will be ask to take calls in this queue.
+- Note, workers that have support call skills: "skills":["support"], will be asked to take calls in this queue.
 
 Create a Workflow, and set:
 - Friendly Name: support.
-- Assignment Callback, Task Reservation Timeout: 10. This gives the worker 10 seconds to accept the reservation before TaskRouter sets them to unavailable, and asks another worker to accept the call reservation.
+- Assignment Callback, Task Reservation Timeout: 10. This gives the worker 10 seconds to accept the reservation before TaskRouter sets them to unavailable, and asks another worker to accept the call reservation. Note, this value can be overridden in the web application.
 - Default queue: support.
 
 Create a Worker, and set:
 - Name: dave.
-- Attributes to: {"skills":["support"],"contact_uri":"+16505551111"}. Replace 16505551111, with your mobile phone number. This is the number that TaskRouter will use to call the worker.
+- Attributes to: {"skills":["support"],"contact_uri":"+16505551111"}. Replace 16505551111, with your mobile phone number. This is the number that TaskRouter will use to call you, the worker.
 
-View Your TaskRouter Worker Activities:
+View your Worker Activities options:
 - Offline, cannot be assigned a task
 - Available(online) to be assign a task
 - Unavailable, the worker is working on a task
@@ -79,7 +77,7 @@ View Your TaskRouter Worker Activities:
 
 ### Create an IVR Studio Flow to Manage Incoming Calls
 
-The Studio flow will welcome the call and then put them into the TaskRouter support Workflow.
+The Studio flow will welcome the caller and then put them into the TaskRouter support workflow.
 
 Go to the Studio dashboard:
 https://www.twilio.com/console/studio
@@ -88,35 +86,33 @@ Create a new flow, and set:
 - Friendly name: Writers IVR.
 - Use the default: Start from scratch.
 
-Drag a "Gather Input On Call" widget onto the flow panel. This widget will welcome callers.
+Drag a "Gather Input On Call" widget onto the flow panel, to welcome callers.
 - Join Trigger Incoming Call to the Gather widget.
 - Set the Text to Say to: "Welcome to Support. I will put you on hold while I find you an agent."
-- Set "Stop gathering after" to 1 digit.
+- Set "Stop gathering after" to 1 digit to allow the caller to quickly put themself into the queue.
 
-Drag an "Enqueue Call" widget onto the flow panel. 
-This widget will put callers into the TaskRouter support Workflow.
-The Workflow will put the caller into the support Task Queue.
+Drag an "Enqueue Call" widget onto the flow panel, to put callers into the TaskRouter support workflow.
+The workflow will put the caller into the support task queue.
 - Join the Gather widget to the Enqueue Call widget.
 - Set, TaskRouter Workspace, to: writers.
 - Set, TaskRouter Workflow, to: support.
 
 <img src="docStudioIvr.jpg" width="200"/>
 
-Click Save. Click Publish. The Studio is complete and ready to use.
+Click Save. Click Publish. The Studio flow is complete and ready to use.
 
-### Configure your Twilio phone number to use the Studio IVR
+### Configure your Twilio phone number to use the Studio IVR Flow
 
-In the Twilio Console, [buy a phone number](https://www.twilio.com/console/phone-numbers/search), if you don't already have one:
+In the Twilio Console, if you don't already have a Twilio phone number,
+[buy a phone number](https://www.twilio.com/console/phone-numbers/search).
 
 In the phone number’s configuration page,
 - Set Voice & Fax, A Call Comes In, to: Studio Flow / Writers IVR
 - Click Save.
 
 Test, by using your mobile phone to call your IVR Twilio phone number.
-- You will hear your Say welcome message.
+- You will hear the Gather widget welcome message.
 - You will be put into the TaskRouter queue and hear the wait music.
-- Disconnect/hangup the call. Your IVR is successfully tested.
-
 Check the queue has 1 caller (currentSize:1):
 ````
 $ node voiceQueueList.js
@@ -124,12 +120,14 @@ $ node voiceQueueList.js
 +  DateCreated:Sep 23 2020  SID:QU362afc106606164d74151aa4750a3160 currentSize:1    maxSize:100 friendlyName:WW1a2796889d5420ee5e715bf2ae460a99 averageWaitTime:106
 ````
 Note, the friendlyName is the Workflow SID.
+- Disconnect/hangup the call. Your IVR is successfully tested.
 
 --------------------------------------------------------------------------------
 
 ### Local Computer Implementation
 
-The application has a NodeJS HTTP webserver.
+The application has a NodeJS HTTP webserver which makes Twilio TaskRouter REST API requests.
+Click [here](https://www.twilio.com/docs/taskrouter/api) for the TaskRouter API documentation.
 
 Download the [tfptaskrouter repository](https://github.com/tigerfarm/tfptaskrouter) zip file.
 
