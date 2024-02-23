@@ -67,19 +67,8 @@ function sayMessage(message) {
 
 const TASKROUTER_BASE_URL = 'https://taskrouter.twilio.com';
 const version = 'v1';
-function generateToken(theIdentity, tokenPassword) {
-    if (theIdentity === "") {
-        console.log("- Required: user identity for creating a token.");
-        return "";
-    }
-    if (tokenPassword === "") {
-        console.log("- Required: tokenPassword");
-        return "";
-    }
-    sayMessage("+ Generate token, ID: " + theIdentity);
-
-    // Need to get the WORKER_SID from theIdentity. 
-    var WORKER_SID = 'WKb9302b30213ee6a76c10cf8b4cf94612';
+function generateToken(workerSid, tokenPassword) {
+    sayMessage("+ Generate token, workerSid: " + workerSid);
 
     // Helper function to create Policy
     function buildWorkspacePolicy(options) {
@@ -102,7 +91,7 @@ function generateToken(theIdentity, tokenPassword) {
         // Workspace Activities Update Policy
         buildWorkspacePolicy({resources: ['Activities'], method: 'POST'}),
         // Workspace Activities Worker Reserations Policy
-        buildWorkspacePolicy({resources: ['Workers', WORKER_SID, 'Reservations', '**'], method: 'POST'}),
+        buildWorkspacePolicy({resources: ['Workers', workerSid, 'Reservations', '**'], method: 'POST'}),
         //
         // Should restrict the following,
         // however it allows the worker set themselves online and offline.
@@ -113,10 +102,10 @@ function generateToken(theIdentity, tokenPassword) {
         accountSid: TR_ACCOUNT_SID,
         authToken: TR_AUTH_TOKEN,
         workspaceSid: WORKSPACE_SID,
-        channelId: WORKER_SID
+        channelId: workerSid
     });
-    const eventBridgePolicies = util.defaultEventBridgePolicies(TR_ACCOUNT_SID, WORKER_SID);
-    const workerPolicies = util.defaultWorkerPolicies(version, WORKSPACE_SID, WORKER_SID);
+    const eventBridgePolicies = util.defaultEventBridgePolicies(TR_ACCOUNT_SID, workerSid);
+    const workerPolicies = util.defaultWorkerPolicies(version, WORKSPACE_SID, workerSid);
     eventBridgePolicies.concat(workerPolicies).concat(workspacePolicies).forEach(function (policy) {
         capability.addPolicy(policy);
     });
@@ -136,7 +125,16 @@ app.get('/tfptaskrouter/generateToken', function (req, res) {
         theTokenPassword = req.query.tokenPassword;
         if (theTokenPassword === TR_TOKEN_PASSWORD) {
             if (req.query.clientid) {
-                res.send(generateToken(req.query.clientid, theTokenPassword));
+                theClientid = req.query.clientid;
+                var workerNameQuery = "`name IN ['" + theClientid + "']}`";
+                trClient.taskrouter.v1.workspaces(WORKSPACE_SID)
+                        .workers
+                        .list({targetWorkersExpression: workerNameQuery})
+                        .then(workers => workers.forEach(worker => {
+                                workerSid = worker.sid;
+                                console.log("++ workerSid: " + workerSid);
+                                res.send(generateToken(workerSid, theTokenPassword));
+                            }));
             } else {
                 sayMessage("- Parameter required: clientid.");
                 res.sendStatus(502);
