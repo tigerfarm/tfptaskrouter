@@ -65,8 +65,11 @@ Create a Workflow, and set:
 - Default queue: support.
 
 Create a Worker, and set:
-- Name: dave.
-- Attributes to: {"skills":["support"],"contact_uri":"+16505551111"}. Replace 16505551111, with your mobile phone number. This is the number that TaskRouter will use to call you, the worker.
+- Worker name: dave.
+- Attributes to: {"name":"dave","skills":["support"],"contact_uri":"+16505551111"}.
+- Replace 16505551111, with your mobile phone number. This is the number that TaskRouter will use to call you, the worker.
+- Attribute "name", is used [retrieve a worker's SID](https://www.twilio.com/docs/taskrouter/api/worker?code-sample=code-list-workers-with-target-expression&code-language=Node.js&code-sdk-version=4.x).
+Attribute "name" value needs to match the "Worker name" value.
 
 View your Worker Activities options:
 - Offline, cannot be assigned a task
@@ -323,8 +326,8 @@ You now have a working and tested TaskRouter implementation.
 - Add a sales TaskRouter queue (skills HAS "sales") and Workflow.
 - Add sales workers ({"skills":["sales"],"contact_uri":"+16505552222"}).
 - Add sales as an IVR option in the Studio flow. This will require adding a Split widget and another Enqueue Call widget. Click [here](https://www.twilio.com/docs/studio#get-started-with-twilio-studio) for a sample flow with a Split widget.
-- Handle the case where no workers are available and the Workflow times out. Create and test a [Studio voicemail](https://www.twilio.com/docs/studio/widget-library#record-voicemail) flow. Link it into your Workflow timeout option.
-- Add business hours to your IVR. If a caller calls outside of the [business hours](https://www.twilio.com/blog/2018/06/custom-javascript-twilio-functions-code-studio-flows.html), put them straight into voicemail.
+- TaskRouter task to voicemail: [Implementing Voicemail with Twilio Flex, TaskRouter, and Insights](https://help.twilio.com/articles/360021082934)
+- Add business hours to your IVR: [Time of day routing with Functions](https://www.twilio.com/docs/runtime/quickstart/time-of-day-routing#time-of-day-routing-in-a-studio-flow)
 - Implement a Twilio Client so that agents can receive calls on their laptop. Click [here](https://github.com/tigerfarm/OwlClient) for my sample Twilio Client which has more features such as putting callers on hold.
 
 --------------------------------------------------------------------------------

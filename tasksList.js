@@ -23,6 +23,7 @@ trClient.taskrouter.v1.workspaces(WORKSPACE_SID)
                         + "SID: " + t.sid
                         + " assignmentStatus: " + t.assignmentStatus + isWrapping
                         + ", Queue:" + t.taskQueueFriendlyName
+                        + " Call SID:" + JSON.parse(t.attributes).call_sid
                         // + " attributes:" + t.attributes
                         );
             });
