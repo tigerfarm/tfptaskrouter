@@ -54,15 +54,16 @@ Create a Workspace, and set:
 - Name: writers.
 
 Create a Task Queue for callers, and set:
-- Task Queue Name to: support.
+- Task Queue Name to: Support.
+- Set "Reservation Activity" and "Assignment Activity" to Offline.
 - Max Reserved Workers: 1.
 - Queue expression: skills HAS "support".
 - Note, workers that have support call skills: "skills":["support"], will be asked to take calls in this queue.
 
 Create a Workflow, and set:
-- Friendly Name: support.
+- Friendly Name: Support.
 - Assignment Callback, Task Reservation Timeout: 10. This gives the worker 10 seconds to accept the reservation before TaskRouter sets them to unavailable, and asks another worker to accept the call reservation. Note, this value can be overridden in the web application.
-- Default queue: support.
+- Default queue: Support.
 
 Create a Worker, and set:
 - Worker name: dave.
@@ -321,11 +322,45 @@ $ node workerStatus.js
 
 You now have a working and tested TaskRouter implementation.
 
+--------------------------------------------------------------------------------
+# Add another Worker, Workflow, and Task Queue
+
+Create a Worker, and set:
+- Worker name: dave.
+- Attributes to: {"name":"susan","skills":["sales"],"contact_uri":"+16505553333"}.
+
+Create a Task Queue for callers, and set:
+- Task Queue Name to: Sales.
+- Max Reserved Workers: 1.
+- Queue expression: skills HAS "sales".
+
+Create a Workflow, and set:
+- Friendly Name: Sales.
+- Set "Reservation Activity" and "Assignment Activity" to Offline.
+- Assignment Callback, Task Reservation Timeout: 10.
+- Default queue: Sales.
+
+Modify the Studio flow for both Sales and Support:
+- Modify the Gather "Text to Say" message: Welcome to the machine. Press 1 for support. Press 2 for sales.
+- Add a TaskRouter writers/Sales Enqueue Call widget.
+- Add a Split widget below the Gather widget.
+- Set Split "Variable to test" to widgets.gather_1.Digits.
+- Set Split transitions to the support and sales Enqueue Call widget.
+
+<img src="docStudioSS.jpg" width="300"/>
+
+Click Save. Click Publish. The Studio flow is complete and ready to use.
+
+Test by calling the Studio flow Twilio phone number.
+- Press 1 and confirm support option continues to work.
+- Press 2 and confirm that the new sales option works.
+
+--------------------------------------------------------------------------------
+#### Have a Twilio Function Monitor TaskRouter Events
+
+
+--------------------------------------------------------------------------------
 #### Next steps:
-- Add more workers.
-- Add a sales TaskRouter queue (skills HAS "sales") and Workflow.
-- Add sales workers ({"skills":["sales"],"contact_uri":"+16505552222"}).
-- Add sales as an IVR option in the Studio flow. This will require adding a Split widget and another Enqueue Call widget. Click [here](https://www.twilio.com/docs/studio#get-started-with-twilio-studio) for a sample flow with a Split widget.
 - TaskRouter task to voicemail: [Implementing Voicemail with Twilio Flex, TaskRouter, and Insights](https://help.twilio.com/articles/360021082934)
 - Add business hours to your IVR: [Time of day routing with Functions](https://www.twilio.com/docs/runtime/quickstart/time-of-day-routing#time-of-day-routing-in-a-studio-flow)
 - Implement a Twilio Client so that agents can receive calls on their laptop. Click [here](https://github.com/tigerfarm/OwlClient) for my sample Twilio Client which has more features such as putting callers on hold.
