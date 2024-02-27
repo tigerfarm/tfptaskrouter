@@ -358,6 +358,9 @@ Test by calling the Studio flow Twilio phone number.
 --------------------------------------------------------------------------------
 #### Have a Twilio Function Monitor TaskRouter Events
 
+Monitor event can be used to trigger programs to handle event such as
+putting a caller into voicemail if no agents are available after a given timeout period.
+
 Create Twilio Function to echo the TaskRouter event values.
 ````
 exports.handler = function(context, event, callback) {
@@ -388,6 +391,50 @@ Task Completed
 Task Canceled
 Task Queue Timeout
 Workflow Timeout
+````
+
+When testing, monitor the Twilio Function logs in the console.
+Sample log messages:
+````
++ + Monitor TaskRouter event.
+++ Event type: task.created
+++ WorkflowName: Support
+++ TaskQueueName: Support
+++ TaskAssignmentStatus: pending
+++ EventDescription: Task WTae209408c67ad861b3c92ab09bbb6798 created
+````
+
+:
+Sample event types:
+````
+"EventType":"task.created"
+"EventType":"task.canceled"
+"EventType":"task-queue.entered"
+"EventType":"workflow.timeout"
+````
+
+Sample JSON log message data:
+````
+{
+"EventType":"task-queue.entered",
+"WorkflowName":"support",
+"TaskAssignmentStatus":"pending",
+"TaskAttributes":"
+{
+\"call_sid\":\"CAc37c57bd0523588e1cb9f66edba5a0aa\"
+\"from\":\"+16505558888\",\"to\":\"+16505559999\",\"direction\":\"inbound\"
+}",
+"TaskChannelUniqueName":"voice",
+"WorkspaceName":"writers",
+"ResourceType":"task",
+"TaskQueueName":"support",
+"TaskQueueSid":"WQbfbb710854eecfb33f30f4efff9d2456",
+"WorkflowSid":"WW1a2796889d5420ee5e715bf2ae460a99",
+"TaskQueueTargetExpression":"skills HAS \"support\"",
+"EventDescription":"Task WT0f661e03c0fb4854674aceaf6fcef96c entered TaskQueue Support",
+"TaskSid":"WT0f661e03c0fb4854674aceaf6fcef96c",
+"ResourceSid":"WT0f661e03c0fb4854674aceaf6fcef96c"
+}
 ````
 
 --------------------------------------------------------------------------------
