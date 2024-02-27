@@ -358,6 +358,8 @@ Modify the Studio flow for both Sales and Support:
 
 <img src="docStudioSS.jpg" width="400"/>
 
+[JSON](StudioFlowSS.json) to create the Studio flow. Just modify the TaskRouter values to be your own.
+
 Click Save. Click Publish. The Studio flow is complete and ready to use.
 
 Test by calling the Studio flow Twilio phone number.
