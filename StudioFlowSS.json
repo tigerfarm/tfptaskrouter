@@ -1,0 +1,258 @@
+{
+  "description": "TaskRouter Writers support and sales",
+  "states": [
+    {
+      "name": "Trigger",
+      "type": "trigger",
+      "transitions": [
+        {
+          "event": "incomingMessage"
+        },
+        {
+          "next": "gather_1",
+          "event": "incomingCall"
+        },
+        {
+          "event": "incomingConversationMessage"
+        },
+        {
+          "event": "incomingRequest"
+        },
+        {
+          "event": "incomingParent"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": -120,
+          "y": -260
+        }
+      }
+    },
+    {
+      "name": "gather_1",
+      "type": "gather-input-on-call",
+      "transitions": [
+        {
+          "next": "split_1",
+          "event": "keypress"
+        },
+        {
+          "next": "say_play_1",
+          "event": "speech"
+        },
+        {
+          "event": "timeout"
+        }
+      ],
+      "properties": {
+        "number_of_digits": 1,
+        "speech_timeout": "auto",
+        "offset": {
+          "x": 210,
+          "y": -60
+        },
+        "loop": 1,
+        "finish_on_key": "#",
+        "say": "Welcome to the machine.\nPress 1 for support.\nPress 2 for sales.",
+        "stop_gather": true,
+        "gather_language": "en",
+        "profanity_filter": "true",
+        "timeout": 5
+      }
+    },
+    {
+      "name": "enqueue_1",
+      "type": "enqueue-call",
+      "transitions": [
+        {
+          "next": "http_1",
+          "event": "callComplete"
+        },
+        {
+          "event": "failedToEnqueue"
+        },
+        {
+          "event": "callFailure"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": -260,
+          "y": 640
+        },
+        "workflow_sid": "WW1a2796889d5420ee5e715bf2ae460a99"
+      }
+    },
+    {
+      "name": "http_1",
+      "type": "make-http-request",
+      "transitions": [
+        {
+          "event": "success"
+        },
+        {
+          "event": "failed"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": -260,
+          "y": 860
+        },
+        "method": "POST",
+        "content_type": "application/x-www-form-urlencoded;charset=utf-8",
+        "body": "Support call is completed.",
+        "url": "https://tfpbooks.herokuapp.com/echo"
+      }
+    },
+    {
+      "name": "http_2",
+      "type": "make-http-request",
+      "transitions": [
+        {
+          "event": "success"
+        },
+        {
+          "event": "failed"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": 160,
+          "y": 860
+        },
+        "method": "GET",
+        "content_type": "application/x-www-form-urlencoded;charset=utf-8",
+        "body": "Sales call is completed.",
+        "url": "https://tfpbooks.herokuapp.com/echo"
+      }
+    },
+    {
+      "name": "split_1",
+      "type": "split-based-on",
+      "transitions": [
+        {
+          "next": "say_play_1",
+          "event": "noMatch"
+        },
+        {
+          "next": "say_play_2",
+          "event": "match",
+          "conditions": [
+            {
+              "friendly_name": "If value equal_to 1",
+              "arguments": [
+                "{{widgets.gather_1.Digits}}"
+              ],
+              "type": "equal_to",
+              "value": "1"
+            }
+          ]
+        },
+        {
+          "next": "say_play_3",
+          "event": "match",
+          "conditions": [
+            {
+              "friendly_name": "If value equal_to 2",
+              "arguments": [
+                "{{widgets.gather_1.Digits}}"
+              ],
+              "type": "equal_to",
+              "value": "2"
+            }
+          ]
+        }
+      ],
+      "properties": {
+        "input": "{{widgets.gather_1.Digits}}",
+        "offset": {
+          "x": -50,
+          "y": 180
+        }
+      }
+    },
+    {
+      "name": "enqueue_2",
+      "type": "enqueue-call",
+      "transitions": [
+        {
+          "next": "http_2",
+          "event": "callComplete"
+        },
+        {
+          "event": "failedToEnqueue"
+        },
+        {
+          "event": "callFailure"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": 160,
+          "y": 630
+        },
+        "workflow_sid": "WWb1e84d95c42c21b096b57b32fe459ca2"
+      }
+    },
+    {
+      "name": "say_play_1",
+      "type": "say-play",
+      "transitions": [
+        {
+          "next": "gather_1",
+          "event": "audioComplete"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": -370,
+          "y": -30
+        },
+        "loop": 1,
+        "say": "Valid keypress option is required."
+      }
+    },
+    {
+      "name": "say_play_2",
+      "type": "say-play",
+      "transitions": [
+        {
+          "next": "enqueue_1",
+          "event": "audioComplete"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": -170,
+          "y": 420
+        },
+        "loop": 1,
+        "say": "Please wait while we find you a support person."
+      }
+    },
+    {
+      "name": "say_play_3",
+      "type": "say-play",
+      "transitions": [
+        {
+          "next": "enqueue_2",
+          "event": "audioComplete"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": 170,
+          "y": 410
+        },
+        "loop": 1,
+        "say": "Please wait while we find you a sales person."
+      }
+    }
+  ],
+  "initial_state": "Trigger",
+  "flags": {
+    "allow_concurrent_calls": true
+  }
+}
