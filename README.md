@@ -4,11 +4,20 @@ In less than two hours, you can use Twilio Studio and TaskRouter to implement a 
 This is the bases of a caller-agent voice call system.
 
 When someone calls your Twilio phone number, they'll hear an IVR welcome message
-and get added into a workflow task queue.
-They'll hear music wait while they wait for TaskRouter to find them an agent.
-TaskRouter will prompt an agent with the option to Accept the call task.
+and get added into a TaskRouter workflow task queue which is a 
+[voice queue](https://www.twilio.com/docs/voice/queue-calls).
+They'll hear music while they wait for TaskRouter to find them an agent.
+TaskRouter will prompt an available agent with the option to Accept the call task.
 If the agent rejects the task, TaskRouter will ask the next available agent.
-If they Accept the call task, they are connected with the caller.
+If the worker agent accepts the call task, they are connected with the caller in a conference call.
+
+#### TaskRouter Worker Agent web application
+
+The agent enters their TaskerRouter worker identity and gets an access token.
+They can then: manage their availablity status and and accept or reject call tasks.
+
+<img src="docTR_WorkerOnline.jpg" width="400"/>
+
 
 #### Call Work Flow
 
