@@ -16,7 +16,7 @@ If the worker agent accepts the call task, they are connected with the caller in
 The agent enters their TaskerRouter worker identity and gets an access token.
 They can then: manage their availablity status and and accept or reject call tasks.
 
-<img src="docTR_WorkerOnline.jpg" width="400"/>
+<img src="docTR_WorkerAr.jpg" width="400"/>
 
 
 #### Call Work Flow
