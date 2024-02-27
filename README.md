@@ -347,7 +347,7 @@ Modify the Studio flow for both Sales and Support:
 - Set Split "Variable to test" to widgets.gather_1.Digits.
 - Set Split transitions to the support and sales Enqueue Call widget.
 
-<img src="docStudioSS.jpg" width="300"/>
+<img src="docStudioSS.jpg" width="400"/>
 
 Click Save. Click Publish. The Studio flow is complete and ready to use.
 
@@ -358,6 +358,37 @@ Test by calling the Studio flow Twilio phone number.
 --------------------------------------------------------------------------------
 #### Have a Twilio Function Monitor TaskRouter Events
 
+Create Twilio Function to echo the TaskRouter event values.
+````
+exports.handler = function(context, event, callback) {
+  console.log("-----------------------------------------------------------------");
+  console.log("+ Monitor TaskRouter event.");
+  let theEventType = event.EventType
+  console.log("++ Event type: " + theEventType);
+  // Other property values:
+  console.log("++ WorkflowName: " + event.WorkflowName);
+  console.log("++ TaskQueueName: " + event.TaskQueueName);
+  console.log("++ TaskAssignmentStatus: " + event.TaskAssignmentStatus);  
+  console.log("++ EventDescription: " + event.EventDescription);
+  //
+  return callback(null, "++ Event type: " + theEventType);
+};
+````
+
+In TaskRouter workspace: writers, go to Settings.
+In Event callbacks,
+enter the above Twilio Function URL as the "Event callback URL".
+
+Feel free to enable all Callback events, click: All events.
+
+I have the following events enabled:
+````
+Task Created
+Task Completed
+Task Canceled
+Task Queue Timeout
+Workflow Timeout
+````
 
 --------------------------------------------------------------------------------
 #### Next steps:
