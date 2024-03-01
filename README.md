@@ -1,6 +1,10 @@
 # Implement a Call Workflow Application
 
-In less than two hours, you can use Twilio Studio and TaskRouter to implement a call flow application system.
+In less than two hours, you can use Twilio 
+[Studio](https://www.twilio.com/docs/studio/widget-library/enqueue-call)
+and 
+[TaskRouter](https://www.twilio.com/docs/taskrouter/how-taskrouter-works)
+to implement a call flow application system.
 This is the bases of a caller-agent voice call system.
 
 When someone calls your Twilio phone number, they'll hear an IVR welcome message
@@ -9,7 +13,8 @@ and get added into a TaskRouter workflow task queue which is a
 They'll hear music while they wait for TaskRouter to find them an agent.
 TaskRouter will prompt an available agent with the option to Accept the call task.
 If the agent rejects the task, TaskRouter will ask the next available agent.
-If the worker agent accepts the call task, they are connected with the caller in a conference call.
+If the worker agent accepts the call task, they are connected with the caller in a 
+[conference call](https://www.twilio.com/docs/voice/conference).
 
 #### TaskRouter Worker Agent web application
 
